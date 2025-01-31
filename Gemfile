@@ -10,7 +10,7 @@ gem "stimulus-rails"
 gem "cssbundling-rails"
 gem "jbuilder"
 
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[windows jruby]
 
 gem "solid_cache"
 gem "solid_queue"
@@ -46,4 +46,7 @@ group :test do
   gem "rspec-rails"
   gem "shoulda", "~> 4.0"
   gem "simplecov", require: false # Optional: for code coverage
+  gem "rails-controller-testing"
 end
+
+gem "bcrypt", "~> 3.1"

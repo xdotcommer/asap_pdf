@@ -1,0 +1,8 @@
+Time::DATE_FORMATS[:display_time] = "%b %-d %l:%M%P"
+Time::DATE_FORMATS[:display_date] = "%b %-d, %Y"
+Time::DATE_FORMATS[:display_full] = "%b %-d, %Y %l:%M%P"
+Time::DATE_FORMATS[:display_time_only] = "%l:%M%P"
+Time::DATE_FORMATS[:display_date_only] = "%b %-d"
+Time::DATE_FORMATS[:display_day_date_time] = "%A: %b %-d, %Y from %-l:%M %p"
+Time::DATE_FORMATS[:display_day_date_time_at] = "%A: %b %-d, %Y at %-l:%M %p"
+Time::DATE_FORMATS[:display_short_time] = "%I:%M %p"

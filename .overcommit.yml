@@ -20,13 +20,7 @@ PreCommit:
     required_executable: './node_modules/.bin/eslint'
     include:
       - '**/*.js'
-      - '**/*.jsx'
       - '**/*.ts'
-      - '**/*.tsx'
-
-  # # Database
-  # RailsSchemaUpToDate:
-  #   enabled: true
 
   # Rails Security
   BundleAudit:

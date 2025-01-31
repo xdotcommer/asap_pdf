@@ -52,9 +52,9 @@ RSpec.describe SessionsController, type: :controller do
       }.to change(Session, :count).by(-1)
     end
 
-    it "redirects to root path" do
+    it "redirects to login path" do
       delete :destroy
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(login_path)
     end
 
     it "clears the session cookie" do

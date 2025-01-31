@@ -30,7 +30,7 @@ RSpec.describe User, type: :model do
 
     it "destroys associated sessions when destroyed" do
       user = User.create!(email_address: "test@example.com", password: "password")
-      session = user.sessions.create!
+      user.sessions.create!
 
       expect { user.destroy }.to change { Session.count }.by(-1)
     end

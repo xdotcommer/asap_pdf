@@ -1,33 +1,78 @@
-# Use this file to configure the Overcommit hooks you wish to use. This will
-# extend the default configuration defined in:
-# https://github.com/sds/overcommit/blob/master/config/default.yml
-#
-# At the topmost level of this YAML file is a key representing type of hook
-# being run (e.g. pre-commit, commit-msg, etc.). Within each type you can
-# customize each hook, such as whether to only run it on certain files (via
-# `include`), whether to only display output if it fails (via `quiet`), etc.
-#
-# For a complete list of hooks, see:
-# https://github.com/sds/overcommit/tree/master/lib/overcommit/hook
-#
-# For a complete list of options that you can use to customize hooks, see:
-# https://github.com/sds/overcommit#configuration
-#
-# Uncomment the following lines to make the configuration take effect.
+# Basic settings
+verify_signatures: false
+concurrency: 1
 
-#PreCommit:
-#  RuboCop:
-#    enabled: true
-#    on_warn: fail # Treat all warnings as failures
-#
-#  TrailingWhitespace:
-#    enabled: true
-#    exclude:
-#      - '**/db/structure.sql' # Ignore trailing whitespace in generated files
-#
-#PostCheckout:
-#  ALL: # Special hook name that customizes all hooks of this type
-#    quiet: true # Change all post-checkout hooks to only display output on failure
-#
-#  IndexTags:
-#    enabled: true # Generate a tags file with `ctags` each time HEAD changes
+PreCommit:
+  StandardRbAutocorrect:
+    enabled: true
+    command: ['bundle', 'exec', 'standardrb']
+    flags: ['--fix', '--except', 'Style/GlobalVars']
+    on_warn: pass
+
+  RSpec:
+    enabled: false
+    command: ['bundle', 'exec', 'rspec']
+    on_warn: fail
+
+  # JavaScript
+  EsLint:
+    enabled: false
+    required_executable: './node_modules/.bin/eslint'
+    include:
+      - '**/*.js'
+      - '**/*.jsx'
+      - '**/*.ts'
+      - '**/*.tsx'
+
+  # # Database
+  # RailsSchemaUpToDate:
+  #   enabled: true
+
+  # Rails Security
+  BundleAudit:
+    enabled: true
+    command: ['bundle', 'exec', 'bundle-audit']
+
+  Brakeman:
+    enabled: true
+    command: ['bundle', 'exec', 'brakeman']
+    flags: ['-q', '--no-summary']
+
+CommitMsg:
+  CapitalizedSubject:
+    enabled: false
+
+PrePush:
+  RSpec:
+    enabled: true
+    command: ['bundle', 'exec', 'rspec']
+    on_warn: fail
+
+  CustomSnykCheck:
+    enabled: false
+    required: true
+    description: 'Running Snyk security checks'
+    command: ['bash', '-c']
+    flags: ['
+      exit_code=0;
+      echo "🔍 Running Snyk security checks...";
+      snyk test --file=Gemfile.lock --fail-on=upgradable || exit_code=1;
+      snyk code test || exit_code=1;
+      if [ "$exit_code" -ne 0 ]; then
+        echo "❌ Commit blocked due to security issues";
+        echo "Run snyk test or snyk code test manually to see detailed reports";
+        exit 1;
+      fi;
+      echo "✅ Snyk security checks passed";
+      exit 0']
+
+  GenerateGitInfo:
+    enabled: true
+    description: 'Generating git info file'
+    command: ['bin/pre-deploy']
+
+PostCheckout:
+  ALL:
+    quiet: true
+  IndexTags:
+    enabled: true

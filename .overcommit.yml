@@ -66,11 +66,6 @@ PrePush:
       echo "✅ Snyk security checks passed";
       exit 0']
 
-  GenerateGitInfo:
-    enabled: true
-    description: 'Generating git info file'
-    command: ['bin/pre-deploy']
-
 PostCheckout:
   ALL:
     quiet: true

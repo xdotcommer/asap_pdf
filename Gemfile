@@ -3,6 +3,7 @@ source "https://rubygems.org"
 gem "rails", "~> 8.0.1"
 gem "propshaft"
 gem "sqlite3", ">= 2.1"
+gem "pg"
 gem "puma", ">= 5.0"
 gem "jsbundling-rails"
 gem "turbo-rails"
@@ -46,8 +47,11 @@ group :test do
   gem "rspec", "~> 3.13"
   gem "rspec-rails"
   gem "shoulda", "~> 4.0"
+  gem "shoulda-matchers", "~> 4.5"
   gem "simplecov", require: false # Optional: for code coverage
   gem "rails-controller-testing"
+  gem "factory_bot_rails", "~> 6.4"
 end
 
 gem "bcrypt", "~> 3.1"
+gem "state_machines", "~> 0.6.0"

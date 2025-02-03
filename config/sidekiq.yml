@@ -3,7 +3,4 @@
 :verbose: false
 
 :queues:
-  - critical
   - default
-  - low
-  - mailers

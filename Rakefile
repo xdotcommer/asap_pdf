@@ -4,3 +4,5 @@
 require_relative "config/application"
 
 Rails.application.load_tasks
+Rake::Task["db:test:prepare"].clear
+task "db:test:prepare" => ["db:prepare"]

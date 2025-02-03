@@ -13,4 +13,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "dashboard#index"
   get "login", to: "sessions#new", as: :login
+
+  resources :dashboard, only: [:index] do
+    collection do
+      post :upload_pdf
+    end
+  end
 end

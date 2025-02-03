@@ -1,0 +1,69 @@
+<div class="min-h-screen bg-base-200">
+  <div class="py-10">
+    <header>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center">
+          <h1 class="text-3xl font-bold leading-tight text-base-content"><%= @site.name %></h1>
+          <div class="flex gap-2">
+            <%= link_to "Edit Site", edit_site_path(@site), class: "btn btn-primary" %>
+            <%= link_to "Back to Sites", sites_path, class: "btn btn-outline" %>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="px-4 py-8 sm:px-0">
+          <%= tag.div(flash[:alert], class: "alert alert-error mb-4") if flash[:alert] %>
+          <%= tag.div(flash[:notice], class: "alert alert-success mb-4") if flash[:notice] %>
+          <div class="card bg-base-100 shadow-xl mb-8">
+            <div class="card-body">
+              <h2 class="card-title mb-4">Site Details</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="text-sm font-medium text-base-content/70">Location</label>
+                  <p class="mt-1 text-base-content"><%= @site.location %></p>
+                </div>
+                <div>
+                  <label class="text-sm font-medium text-base-content/70">Primary URL</label>
+                  <p class="mt-1">
+                    <%= link_to @site.primary_url, @site.primary_url, target: "_blank", class: "link link-primary" %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title mb-4">Documents</h2>
+              <div class="overflow-x-auto">
+                <table class="table table-zebra w-full">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Status</th>
+                      <th>Created</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @documents.each do |document| %>
+                      <tr>
+                        <td><%= document.title %></td>
+                        <td><%= document.status %></td>
+                        <td><%= document.created_at.to_fs(:long) %></td>
+                        <td class="text-right">
+                          <%= link_to "View", document_path(document), class: "btn btn-sm btn-outline btn-info" %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

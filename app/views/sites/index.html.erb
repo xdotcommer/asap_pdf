@@ -1,0 +1,55 @@
+<div class="min-h-screen bg-base-200">
+  <div class="py-10">
+    <header>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center">
+          <h1 class="text-3xl font-bold leading-tight text-base-content">Sites</h1>
+          <%= link_to "Add Site", new_site_path, class: "btn btn-primary" %>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="px-4 py-8 sm:px-0">
+          <%= tag.div(flash[:alert], class: "alert alert-error mb-4") if flash[:alert] %>
+          <%= tag.div(flash[:notice], class: "alert alert-success mb-4") if flash[:notice] %>
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+              <div class="overflow-x-auto">
+                <table class="table table-zebra w-full">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Location</th>
+                      <th>URL</th>
+                      <th>Documents</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @sites.each do |site| %>
+                      <tr>
+                        <td>
+                          <%= link_to site.name, site_path(site), class: "link link-primary" %>
+                        </td>
+                        <td><%= site.location %></td>
+                        <td>
+                          <%= link_to site.primary_url, site.primary_url, target: "_blank", class: "link link-primary" %>
+                        </td>
+                        <td><%= site.documents.count %></td>
+                        <td class="text-right">
+                          <%= link_to "Edit", edit_site_path(site), class: "btn btn-sm btn-outline btn-info" %>
+                          <%= link_to "Delete", site_path(site), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline btn-error ml-2" %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

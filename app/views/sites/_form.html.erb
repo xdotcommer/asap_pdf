@@ -1,0 +1,39 @@
+<%= form_with(model: site) do |form| %>
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title mb-4">Site Information</h2>
+      <p class="text-base-content/70 mb-6">Please provide the details for this site.</p>
+      <div class="form-control w-full max-w-lg mb-4">
+        <%= form.label :name, class: "label" %>
+        <%= form.text_field :name, class: "input input-bordered w-full" %>
+        <% if site.errors[:name].any? %>
+          <div class="label">
+            <span class="label-text-alt text-error"><%= site.errors[:name].join(", ") %></span>
+          </div>
+        <% end %>
+      </div>
+      <div class="form-control w-full max-w-lg mb-4">
+        <%= form.label :location, class: "label" %>
+        <%= form.text_field :location, class: "input input-bordered w-full" %>
+        <% if site.errors[:location].any? %>
+          <div class="label">
+            <span class="label-text-alt text-error"><%= site.errors[:location].join(", ") %></span>
+          </div>
+        <% end %>
+      </div>
+      <div class="form-control w-full max-w-lg mb-8">
+        <%= form.label :primary_url, "Primary URL", class: "label" %>
+        <%= form.url_field :primary_url, class: "input input-bordered w-full" %>
+        <% if site.errors[:primary_url].any? %>
+          <div class="label">
+            <span class="label-text-alt text-error"><%= site.errors[:primary_url].join(", ") %></span>
+          </div>
+        <% end %>
+      </div>
+      <div class="card-actions justify-end">
+        <%= link_to "Cancel", sites_path, class: "btn btn-outline" %>
+        <%= form.submit class: "btn btn-primary ml-2" %>
+      </div>
+    </div>
+  </div>
+<% end %>

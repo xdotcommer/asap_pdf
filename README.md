@@ -16,8 +16,8 @@ Before you begin, ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/xdotcommer/access_pdf_ui.git
-   cd access_pdf_ui
+   git clone https://github.com/xdotcommer/asap_pdf.git
+   cd asap_pdf
    ```
 
 2. Install Ruby dependencies:
@@ -75,8 +75,8 @@ ExampleJob.perform_later("argument")
 
 Run the test suite:
 ```bash
-rails test:prepare
-bundle exec bin/rspec
+bundle exec rails test:prepare
+bundle exec rspec
 ```
 
 ## Development Tools

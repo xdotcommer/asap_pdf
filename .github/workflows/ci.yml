@@ -31,6 +31,12 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Run security scan
+        run: bundle exec brakeman -q -w2
+
+      - name: Run linter
+        run: bundle exec rubocop
+
       - name: Set up database
         env:
           RAILS_ENV: test

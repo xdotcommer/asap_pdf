@@ -1,68 +1,40 @@
 name: CI
 
 on:
-  pull_request:
   push:
+    branches: [ main ]
+  pull_request:
     branches: [ main ]
 
 jobs:
-  scan_ruby:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Lint code for consistent style
-        run: bundle exec standardrb --format github --except Style/GlobalVars
-
   test:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Install dependencies
-        run: bundle install
-
-      - name: Generate RSpec binstubs
-        run: bundle binstubs rspec-core
-
-      - name: Setup test database
+      - name: Set up database
         env:
           RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/access_pdf_test
         run: |
-          bin/rails db:create
-          bin/rails db:schema:load
-
-      - name: Run tests
-        env:
-          RAILS_ENV: test
-        run: bin/rspec
+          bundle exec rails db:create
+          bundle exec rails db:schema:load

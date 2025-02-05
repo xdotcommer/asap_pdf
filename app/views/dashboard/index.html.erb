@@ -16,26 +16,6 @@
           <div class="card bg-base-100 shadow-xl p-6">
             <p class="text-base-content">Welcome to your dashboard. This is where you'll see your content and manage your account.</p>
           </div>
-          <div class="card bg-base-100 shadow-xl p-6 mt-4">
-            <h2 class="text-2xl font-bold mb-4">Upload PDF</h2>
-            <%= form_with(model: @pdf, url: upload_pdf_dashboard_path, local: true, html: { class: "space-y-4" }) do |form| %>
-              <div class="form-control">
-                <%= form.label :file, class: "label" %>
-                <%= form.file_field :file, class: "input input-bordered" %>
-              </div>
-              <div class="form-control">
-                <%= form.submit "Upload", class: "btn btn-primary" %>
-              </div>
-            <% end %>
-          </div>
-          <div class="card bg-base-100 shadow-xl p-6 mt-4">
-            <h2 class="text-2xl font-bold mb-4">Your PDFs</h2>
-            <ul class="list-disc list-inside">
-              <% @pdfs.each do |pdf| %>
-                <li><%= link_to pdf.file.filename, rails_blob_path(pdf.file, disposition: "attachment"), class: "link" %></li>
-              <% end %>
-            </ul>
-          </div>
         </div>
       </div>
     </main>

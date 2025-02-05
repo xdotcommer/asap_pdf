@@ -27,7 +27,11 @@
                 <div>
                   <label class="text-sm font-medium text-base-content/70">Primary URL</label>
                   <p class="mt-1">
-                    <%= link_to @site.primary_url, @site.primary_url, target: "_blank", class: "link link-primary" %>
+                    <% if safe_url = safe_url(@site.primary_url) %>
+                      <%= link_to h(@site.primary_url), safe_url, target: "_blank", rel: "noopener noreferrer", class: "link link-primary" %>
+                    <% else %>
+                      <%= h(@site.primary_url) %>
+                    <% end %>
                   </p>
                 </div>
               </div>

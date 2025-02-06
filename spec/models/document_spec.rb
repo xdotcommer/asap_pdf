@@ -13,13 +13,13 @@ RSpec.describe Document, type: :model do
   it { should validate_inclusion_of(:document_status).in_array(%w[discovered downloaded]) }
 
   it { should validate_presence_of(:classification_status) }
-  it { should validate_inclusion_of(:classification_status).in_array(%w[pending auto_classified classified reclassified]) }
+  it { should validate_inclusion_of(:classification_status).in_array(%w[classification_pending auto_classified classified reclassified]) }
 
   it { should validate_presence_of(:policy_review_status) }
-  it { should validate_inclusion_of(:policy_review_status).in_array(%w[pending auto_reviewed reviewed rereviewed]) }
+  it { should validate_inclusion_of(:policy_review_status).in_array(%w[policy_pending auto_reviewed reviewed rereviewed]) }
 
   it { should validate_presence_of(:recommendation_status) }
-  it { should validate_inclusion_of(:recommendation_status).in_array(%w[pending auto_recommendation recommendation_adjusted recommended]) }
+  it { should validate_inclusion_of(:recommendation_status).in_array(%w[recommendation_pending auto_recommendation recommendation_adjusted recommended]) }
 
   describe "S3 storage" do
     let(:site) { create(:site, primary_url: "https://www.city.org") }
@@ -119,7 +119,7 @@ RSpec.describe Document, type: :model do
 
   describe "workflow" do
     let(:site) { create(:site) }
-    let(:document) { create(:document, site: site, document_status: "discovered", classification_status: "pending", policy_review_status: "pending", recommendation_status: "pending") }
+    let(:document) { create(:document, site: site, document_status: "discovered", classification_status: "classification_pending", policy_review_status: "policy_pending", recommendation_status: "recommendation_pending") }
 
     context "document status transitions" do
       it "follows the document status workflow" do
@@ -145,7 +145,7 @@ RSpec.describe Document, type: :model do
             confidence: 0.95
           )
         }.to change(document, :classification_status)
-          .from("pending").to("auto_classified")
+          .from("classification_pending").to("auto_classified")
           .and change(document, :recommended_category).to("permit")
           .and change(document, :category_confidence).to(0.95)
       end
@@ -184,7 +184,7 @@ RSpec.describe Document, type: :model do
             confidence: 0.88
           )
         }.to change(document, :policy_review_status)
-          .from("pending").to("auto_reviewed")
+          .from("policy_pending").to("auto_reviewed")
           .and change(document, :recommended_accessibility_action).to("ocr_needed")
           .and change(document, :accessibility_confidence).to(0.88)
       end
@@ -218,7 +218,7 @@ RSpec.describe Document, type: :model do
 
       it "follows the complete recommendation workflow" do
         expect { document.complete_recommendation }.to change(document, :recommendation_status)
-          .from("pending").to("auto_recommendation")
+          .from("recommendation_pending").to("auto_recommendation")
       end
 
       it "follows the change recommendation workflow" do
@@ -274,7 +274,7 @@ RSpec.describe Document, type: :model do
 
           history = document.workflow_histories.last
           expect(history.status_type).to eq("classification_status")
-          expect(history.from_status).to eq("pending")
+          expect(history.from_status).to eq("classification_pending")
           expect(history.to_status).to eq("auto_classified")
           expect(history.action_type).to eq("complete_classification")
           expect(history.metadata).to include(
@@ -326,7 +326,7 @@ RSpec.describe Document, type: :model do
 
           history = document.workflow_histories.last
           expect(history.status_type).to eq("policy_review_status")
-          expect(history.from_status).to eq("pending")
+          expect(history.from_status).to eq("policy_pending")
           expect(history.to_status).to eq("auto_reviewed")
           expect(history.action_type).to eq("complete_policy_review")
           expect(history.metadata).to include(
@@ -378,7 +378,7 @@ RSpec.describe Document, type: :model do
 
           history = document.workflow_histories.last
           expect(history.status_type).to eq("recommendation_status")
-          expect(history.from_status).to eq("pending")
+          expect(history.from_status).to eq("recommendation_pending")
           expect(history.to_status).to eq("auto_recommendation")
           expect(history.action_type).to eq("complete_recommendation")
           expect(history.metadata).to eq({})

@@ -55,9 +55,9 @@ class Document < ApplicationRecord
 
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp}
   validates :document_status, presence: true, inclusion: {in: %w[discovered downloaded]}
-  validates :classification_status, presence: true, inclusion: {in: %w[pending auto_classified classified reclassified]}
-  validates :policy_review_status, presence: true, inclusion: {in: %w[pending auto_reviewed reviewed rereviewed]}
-  validates :recommendation_status, presence: true, inclusion: {in: %w[pending auto_recommendation recommendation_adjusted recommended]}
+  validates :classification_status, presence: true, inclusion: {in: %w[classification_pending auto_classified classified reclassified]}
+  validates :policy_review_status, presence: true, inclusion: {in: %w[policy_pending auto_reviewed reviewed rereviewed]}
+  validates :recommendation_status, presence: true, inclusion: {in: %w[recommendation_pending auto_recommendation recommendation_adjusted recommended]}
 
   state_machine :document_status, initial: :discovered do
     after_transition any => any do |document, transition|
@@ -69,7 +69,7 @@ class Document < ApplicationRecord
     end
   end
 
-  state_machine :classification_status, initial: :pending do
+  state_machine :classification_status, initial: :classification_pending do
     after_transition any => any do |document, transition|
       document.send(:create_workflow_history, transition)
     end
@@ -90,7 +90,7 @@ class Document < ApplicationRecord
     end
 
     event :complete_classification do
-      transition pending: :auto_classified
+      transition classification_pending: :auto_classified
     end
 
     event :approve_classification do
@@ -102,7 +102,7 @@ class Document < ApplicationRecord
     end
   end
 
-  state_machine :policy_review_status, initial: :pending do
+  state_machine :policy_review_status, initial: :policy_pending do
     after_transition any => any do |document, transition|
       document.send(:create_workflow_history, transition)
     end
@@ -123,7 +123,7 @@ class Document < ApplicationRecord
     end
 
     event :complete_policy_review do
-      transition pending: :auto_reviewed
+      transition policy_pending: :auto_reviewed
     end
 
     event :approve_policy do
@@ -135,13 +135,13 @@ class Document < ApplicationRecord
     end
   end
 
-  state_machine :recommendation_status, initial: :pending do
+  state_machine :recommendation_status, initial: :recommendation_pending do
     after_transition any => any do |document, transition|
       document.send(:create_workflow_history, transition)
     end
 
     event :complete_recommendation do
-      transition pending: :auto_recommendation
+      transition recommendation_pending: :auto_recommendation
     end
 
     event :change_recommendation do

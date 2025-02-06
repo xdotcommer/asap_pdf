@@ -3,9 +3,9 @@ FactoryBot.define do
     file_name { "example.pdf" }
     url { "http://example.com/example.pdf" }
     document_status { "discovered" }
-    classification_status { "pending" }
-    policy_review_status { "pending" }
-    recommendation_status { "pending" }
+    classification_status { "classification_pending" }
+    policy_review_status { "policy_pending" }
+    recommendation_status { "recommendation_pending" }
     site
 
     trait :downloaded do

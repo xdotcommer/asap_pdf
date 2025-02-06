@@ -98,6 +98,30 @@ The following environment variables can be configured:
 - `AWS_ACCESS_KEY_ID`: AWS access key for S3 in production
 - `AWS_SECRET_ACCESS_KEY`: AWS secret key for S3 in production
 
+## API Documentation
+
+The application provides a RESTful API using Grape. API documentation is available through Swagger UI.
+
+### Accessing the API Documentation
+
+Once the application is running:
+1. Visit http://localhost:3000/api-docs to access the Swagger UI
+2. Browse and test the available endpoints directly in your browser
+
+### Available Endpoints
+
+#### Sites API (v1)
+
+- `GET /api/v1/sites`
+  - Lists all sites
+  - Returns site details excluding user_id, created_at, updated_at
+  - Includes s3_endpoint for each site
+
+- `GET /api/v1/sites/:id`
+  - Retrieves a specific site
+  - Returns site details excluding user_id, created_at, updated_at
+  - Includes s3_endpoint
+
 ## Document Storage
 
 The application uses S3 with automatic versioning to track document changes over time. This allows us to maintain a complete history of each document as it changes externally (e.g., when a city updates their PDF) or internally (e.g., after accessibility improvements).
@@ -130,7 +154,21 @@ See [architecture.md](docs/architecture.md#document-storage-and-versioning) for 
      secret_access_key: your_secret_key_here
    ```
 
-3. **Working with Versions**:
+3. **S3 Path Structure**:
+   The application uses a standardized S3 path structure for all documents:
+   ```ruby
+   # Global S3 bucket
+   S3_BUCKET = "s3://cfa-aistudio-asap-pdf"
+
+   # Site-specific paths
+   site.s3_endpoint          # Returns "s3://cfa-aistudio-asap-pdf/site-url-host"
+   site.s3_endpoint_prefix   # Returns "site-url-host" (sanitized hostname)
+   site.s3_key_for("file")  # Returns "site-url-host/file"
+   ```
+   Each site gets its own prefix based on its primary URL's hostname, ensuring
+   unique and organized storage paths.
+
+4. **Working with Versions**:
    ```ruby
    # Get document versions
    document.latest_file          # Most recent version

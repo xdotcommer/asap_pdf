@@ -14,11 +14,13 @@ require "action_cable/engine"
 
 Bundler.require(*Rails.groups)
 
-module AccessPdfUi
+module AsapPdf
   class Application < Rails::Application
     config.load_defaults 8.0
 
     config.autoload_lib(ignore: %w[assets tasks])
+    config.paths.add "app/api", glob: "**/*.rb"
+    config.autoload_paths += Dir["#{Rails.root}/app/api/*"]
     config.view_component.preview_paths << "#{Rails.root}/spec/components/previews" if Rails.env.development?
 
     config.generators.system_tests = nil

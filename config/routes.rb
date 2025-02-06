@@ -14,5 +14,9 @@ Rails.application.routes.draw do
     resources :documents, shallow: true
   end
 
+  mount AsapPdf::API => "/api"
+  mount Rswag::Api::Engine => "/api-docs"
+  mount Rswag::Ui::Engine => "/docs"
+
   root "dashboard#index"
 end

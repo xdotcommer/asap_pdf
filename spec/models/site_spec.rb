@@ -55,6 +55,18 @@ RSpec.describe Site, type: :model do
       end
     end
 
+    describe "#s3_endpoint" do
+      it "combines S3_BUCKET with endpoint prefix" do
+        site = build(:site, primary_url: "https://www.city.org")
+        expect(site.s3_endpoint).to eq("s3://cfa-aistudio-asap-pdf/www-city-org")
+      end
+
+      it "returns nil for blank URL" do
+        site = build(:site, primary_url: nil)
+        expect(site.s3_endpoint).to be_nil
+      end
+    end
+
     describe "#s3_key_for" do
       it "combines endpoint prefix with filename" do
         site = build(:site, primary_url: "https://www.city.org")
@@ -65,6 +77,30 @@ RSpec.describe Site, type: :model do
         site = build(:site, primary_url: "https://www.city.org")
         expect(site.s3_key_for("folder/test.pdf")).to eq("www-city-org/folder/test.pdf")
       end
+    end
+  end
+
+  describe "#as_json" do
+    let(:site) { create(:site, primary_url: "https://www.city.org") }
+
+    it "excludes user_id, created_at, and updated_at" do
+      json = site.as_json
+      expect(json.keys).not_to include("user_id", "created_at", "updated_at")
+    end
+
+    it "includes s3_endpoint" do
+      json = site.as_json
+      expect(json["s3_endpoint"]).to eq("s3://cfa-aistudio-asap-pdf/www-city-org")
+    end
+
+    it "includes basic attributes" do
+      json = site.as_json
+      expect(json).to include(
+        "id" => site.id,
+        "name" => site.name,
+        "location" => site.location,
+        "primary_url" => site.primary_url
+      )
     end
   end
 end

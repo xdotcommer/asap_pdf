@@ -32,6 +32,7 @@ group :development, :test do
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
   gem "dotenv-rails", "~> 3.1"
   gem "standard"
+  gem "rswag-specs"
 end
 
 group :development do
@@ -56,3 +57,10 @@ end
 gem "bcrypt", "~> 3.1"
 gem "state_machines", "~> 0.6.0"
 gem "aws-sdk-s3", "~> 1.141"  # For S3 versioning support
+
+# API and Documentation
+gem "grape"
+gem "grape-swagger"
+gem "rswag"
+gem "rswag-api"
+gem "rswag-ui"

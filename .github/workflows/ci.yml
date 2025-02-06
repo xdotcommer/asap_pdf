@@ -35,7 +35,7 @@ jobs:
         run: bundle exec brakeman -q -w2
 
       - name: Run linter
-        run: bundle exec rubocop
+        run: bundle exec standardrb
 
       - name: Set up database
         env:

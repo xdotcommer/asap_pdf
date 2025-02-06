@@ -3,6 +3,56 @@ class Document < ApplicationRecord
   has_many :workflow_histories, class_name: "DocumentWorkflowHistory"
 
   validates :file_name, presence: true
+
+  def s3_path
+    "#{site.s3_endpoint_prefix}/#{id}/document.pdf"
+  end
+
+  def s3_bucket
+    @s3_bucket ||= Aws::S3::Resource.new(
+      access_key_id: storage_config[:access_key_id],
+      secret_access_key: storage_config[:secret_access_key],
+      region: storage_config[:region],
+      endpoint: storage_config[:endpoint],
+      force_path_style: storage_config[:force_path_style]
+    ).bucket(storage_config[:bucket])
+  end
+
+  def s3_object
+    s3_bucket.object(s3_path)
+  end
+
+  def file_versions
+    s3_bucket.object_versions(prefix: s3_path)
+  end
+
+  def latest_file
+    file_versions.first
+  end
+
+  def file_version(version_id)
+    s3_object.get(version_id: version_id)
+  end
+
+  def version_metadata(version)
+    {
+      version_id: version.version_id,
+      last_modified: version.last_modified,
+      size: version.size,
+      etag: version.etag
+    }
+  end
+
+  private
+
+  def storage_config
+    @storage_config ||= begin
+      config = Rails.application.config.active_storage.service_configurations[Rails.env.to_s]
+      raise "S3 storage configuration not found for #{Rails.env}" unless config
+      config.symbolize_keys
+    end
+  end
+
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp}
   validates :document_status, presence: true, inclusion: {in: %w[discovered downloaded]}
   validates :classification_status, presence: true, inclusion: {in: %w[pending auto_classified classified reclassified]}

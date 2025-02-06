@@ -24,11 +24,67 @@ This document outlines the architecture of the PDF processing pipeline, includin
    - **Document Transformer**: Extracts and transforms PDF content into MD or HTML
 
 3. **AWS Infrastructure**:
-   - **S3**: Stores PDF files and other assets
+   - **S3**: Stores versioned PDF files and other assets
+     - Uses bucket versioning for document history
+     - Organizes files by site and document ID
+     - Maintains complete version history of all documents
    - **Lambda**: Runs Python components
    - **RDS**: Manages the Rails application database
    - **Fargate**: Runs the Rails application
    - **Elasticache (Redis)**: Manages background jobs and job queuing
+
+## Document Storage and Versioning
+
+### S3 Storage Structure
+
+Documents are stored in S3 using a hierarchical structure:
+```
+cfa-aistudio-asap-pdf/                 # Bucket
+├── www-city-org/                      # Site prefix (from primary_url)
+│   ├── 123/                           # Document ID
+│   │   └── document.pdf               # PDF file (versioned)
+│   └── 456/
+│       └── document.pdf
+└── www-othercity-gov/
+    └── 789/
+        └── document.pdf
+```
+
+### Version Management
+
+The system uses S3 versioning to track document changes over time:
+
+1. **Automatic Versioning**:
+   - Every file update creates a new version automatically
+   - S3 maintains complete version history
+   - No explicit version management needed in application code
+
+2. **Version Access**:
+   - Latest version always available at the main path
+   - Previous versions accessible by version ID
+   - Full version history available through S3 API
+
+3. **Document Model Integration**:
+   ```ruby
+   document.s3_path             # Get full S3 path
+   document.latest_file         # Get current version
+   document.file_versions       # List all versions
+   document.file_version(id)    # Get specific version
+   document.version_metadata(v) # Get version metadata
+   ```
+
+4. **Version Metadata**:
+   - Version ID
+   - Last modified timestamp
+   - File size
+   - ETag for change detection
+
+### Development Environment
+
+LocalStack provides S3 versioning support in development:
+- Automatically creates versioned bucket
+- Matches production S3 behavior
+- Enables local testing of version management
 
 4. **Background Processing**:
    - **Sidekiq**: Manages background jobs in the Rails application

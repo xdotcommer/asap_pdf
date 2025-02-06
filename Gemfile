@@ -55,3 +55,4 @@ end
 
 gem "bcrypt", "~> 3.1"
 gem "state_machines", "~> 0.6.0"
+gem "aws-sdk-s3", "~> 1.141"  # For S3 versioning support

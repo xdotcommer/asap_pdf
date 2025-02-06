@@ -31,4 +31,40 @@ RSpec.describe Site, type: :model do
       expect(site).not_to be_valid
     end
   end
+
+  describe "S3 functionality" do
+    describe "#s3_endpoint_prefix" do
+      it "converts primary_url host to dasherized format" do
+        site = build(:site, primary_url: "https://www.city.org")
+        expect(site.s3_endpoint_prefix).to eq("www-city-org")
+      end
+
+      it "handles URLs with multiple subdomains" do
+        site = build(:site, primary_url: "https://docs.sub.city.gov")
+        expect(site.s3_endpoint_prefix).to eq("docs-sub-city-gov")
+      end
+
+      it "handles URLs with dashes" do
+        site = build(:site, primary_url: "https://my-city.org")
+        expect(site.s3_endpoint_prefix).to eq("my-city-org")
+      end
+
+      it "returns nil for blank URL" do
+        site = build(:site, primary_url: nil)
+        expect(site.s3_endpoint_prefix).to be_nil
+      end
+    end
+
+    describe "#s3_key_for" do
+      it "combines endpoint prefix with filename" do
+        site = build(:site, primary_url: "https://www.city.org")
+        expect(site.s3_key_for("test.pdf")).to eq("www-city-org/test.pdf")
+      end
+
+      it "handles nested paths in filename" do
+        site = build(:site, primary_url: "https://www.city.org")
+        expect(site.s3_key_for("folder/test.pdf")).to eq("www-city-org/folder/test.pdf")
+      end
+    end
+  end
 end

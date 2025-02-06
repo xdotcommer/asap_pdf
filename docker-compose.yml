@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"  # LocalStack edge port
+    environment:
+      - SERVICES=s3
+      - AWS_DEFAULT_REGION=us-east-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - ./tmp/localstack:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  setup:
+    image: amazon/aws-cli:latest
+    volumes:
+      - ./bin/setup-localstack:/setup-localstack
+    entrypoint: ["/bin/bash", "/setup-localstack"]
+    depends_on:
+      localstack:
+        condition: service_healthy

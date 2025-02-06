@@ -1,6 +1,6 @@
-# Access PDF UI
+# ASAP PDF
 
-A Rails application for managing and accessing PDF documents.
+A Rails application for monitoring websites and automating the remediation of and accessibility of PDF files.
 
 ## Prerequisites
 
@@ -11,6 +11,7 @@ Before you begin, ensure you have the following installed:
 * Yarn (latest version)
 * Redis (for Sidekiq background jobs)
 * SQLite3 (default database)
+* Docker and Docker Compose (for LocalStack S3 in development)
 
 ## Development Setup
 
@@ -94,6 +95,54 @@ The project includes several development tools:
 The following environment variables can be configured:
 
 - `REDIS_URL`: Redis connection URL (default: redis://localhost:6379/0)
+- `AWS_ACCESS_KEY_ID`: AWS access key for S3 in production
+- `AWS_SECRET_ACCESS_KEY`: AWS secret key for S3 in production
+
+## Document Storage
+
+The application uses S3 with automatic versioning to track document changes over time. This allows us to maintain a complete history of each document as it changes externally (e.g., when a city updates their PDF) or internally (e.g., after accessibility improvements).
+
+See [architecture.md](docs/architecture.md#document-storage-and-versioning) for detailed documentation of the storage system.
+
+### Quick Start
+
+1. **Development Setup**:
+   ```bash
+   docker-compose up
+   ```
+   This starts LocalStack with S3 versioning enabled, matching production behavior.
+
+2. **Production Setup**:
+   ```bash
+   # Create and configure S3 bucket
+   aws s3 mb s3://cfa-aistudio-asap-pdf
+   aws s3api put-bucket-versioning \
+     --bucket cfa-aistudio-asap-pdf \
+     --versioning-configuration Status=Enabled
+
+   # Configure credentials
+   EDITOR="code --wait" bin/rails credentials:edit
+   ```
+   Add to credentials:
+   ```yaml
+   aws:
+     access_key_id: your_access_key_here
+     secret_access_key: your_secret_key_here
+   ```
+
+3. **Working with Versions**:
+   ```ruby
+   # Get document versions
+   document.latest_file          # Most recent version
+   document.file_versions        # All versions
+   document.file_version(id)     # Specific version
+
+   # Get version details
+   version = document.latest_file
+   document.version_metadata(version)  # Version metadata
+   ```
+
+The system automatically maintains version history as files change, with no additional configuration needed. Each document has its own path in S3 based on its site's URL and document ID.
 
 ## Contributing
 

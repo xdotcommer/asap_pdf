@@ -37,7 +37,7 @@ end
 
 group :development do
   gem "better_errors", "~> 2.10.1"
-  gem "ruby-lsp", "~> 0.23.8"
+  gem "ruby-lsp", "~> 0.23.9"
   gem "bullet", "~> 8.0"
   gem "web-console"
   gem "dockerfile-rails", ">= 1.7.2"

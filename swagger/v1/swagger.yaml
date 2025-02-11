@@ -1,11 +1,51 @@
 ---
 openapi: 3.0.1
 info:
-  title: API V1
+  title: ASAP PDF API
   version: v1
+  description: API documentation for ASAP PDF service
 paths: {}
 servers:
-- url: https://{defaultHost}
+- url: "{protocol}://{host}"
   variables:
-    defaultHost:
-      default: www.example.com
+    protocol:
+      enum:
+      - http
+      - https
+      default: http
+    host:
+      default: localhost:3000
+components:
+  schemas:
+    site:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        location:
+          type: string
+        primary_url:
+          type: string
+      required:
+      - id
+      - name
+      - location
+      - primary_url
+    document:
+      type: object
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        document_status:
+          type: string
+        s3_path:
+          type: string
+      required:
+      - id
+      - url
+      - document_status
+      - s3_path

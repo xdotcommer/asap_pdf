@@ -1,4 +1,4 @@
-class SitesController < ApplicationController
+class SitesController < AuthenticatedController
   before_action :find_site, only: [:show, :edit, :update, :destroy]
   before_action :ensure_user_owns_site, only: [:show, :edit, :update, :destroy]
 

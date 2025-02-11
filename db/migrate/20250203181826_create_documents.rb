@@ -5,10 +5,10 @@ class CreateDocuments < ActiveRecord::Migration[8.0]
       t.string :url
       t.integer :file_size
       t.datetime :last_modified_date
-      t.string :document_status
-      t.string :classification_status
-      t.string :policy_review_status
-      t.string :recommendation_status
+      t.string :document_status, default: "discovered"
+      t.string :classification_status, default: "classification_pending"
+      t.string :policy_review_status, default: "policy_pending"
+      t.string :recommendation_status, default: "recommendation_pending"
       t.string :status
       t.string :document_category
       t.float :document_category_confidence

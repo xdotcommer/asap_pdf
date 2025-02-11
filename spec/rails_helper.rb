@@ -19,11 +19,28 @@ RSpec.configure do |config|
 
   config.use_transactional_fixtures = true
 
+  # Clean the database between tests
+  config.before(:each) do
+    Site.delete_all
+  end
+
   config.filter_rails_from_backtrace!
 
-  config.include Rails::Controller::Testing::TestProcess
-  config.include Rails::Controller::Testing::TemplateAssertions
-  config.include Rails::Controller::Testing::Integration
+  config.include Rails::Controller::Testing::TestProcess, type: :controller
+  config.include Rails::Controller::Testing::TemplateAssertions, type: :controller
+  config.include Rails::Controller::Testing::Integration, type: :controller
+
+  # Configure API specs to use Rack::Test
+  config.include Rack::Test::Methods, type: :api
+
+  config.define_derived_metadata(file_path: %r{spec/requests/api}) do |metadata|
+    metadata[:type] = :api
+  end
+
+  # Helper to get the Grape API app
+  def app
+    AsapPdf::API
+  end
 
   Shoulda::Matchers.configure do |shoulda_config|
     shoulda_config.integrate do |with|

@@ -9,17 +9,25 @@ RSpec.describe Document, type: :model do
   it { should allow_value("http://example.com").for(:url) }
   it { should_not allow_value("invalid-url").for(:url) }
 
-  it { should validate_presence_of(:document_status) }
   it { should validate_inclusion_of(:document_status).in_array(%w[discovered downloaded]) }
+  it "defaults document_status to discovered" do
+    expect(Document.new.document_status).to eq("discovered")
+  end
 
-  it { should validate_presence_of(:classification_status) }
   it { should validate_inclusion_of(:classification_status).in_array(%w[classification_pending auto_classified classified reclassified]) }
+  it "defaults classification_status to classification_pending" do
+    expect(Document.new.classification_status).to eq("classification_pending")
+  end
 
-  it { should validate_presence_of(:policy_review_status) }
   it { should validate_inclusion_of(:policy_review_status).in_array(%w[policy_pending auto_reviewed reviewed rereviewed]) }
+  it "defaults policy_review_status to policy_pending" do
+    expect(Document.new.policy_review_status).to eq("policy_pending")
+  end
 
-  it { should validate_presence_of(:recommendation_status) }
   it { should validate_inclusion_of(:recommendation_status).in_array(%w[recommendation_pending auto_recommendation recommendation_adjusted recommended]) }
+  it "defaults recommendation_status to recommendation_pending" do
+    expect(Document.new.recommendation_status).to eq("recommendation_pending")
+  end
 
   describe "S3 storage" do
     let(:site) { create(:site, primary_url: "https://www.city.org") }

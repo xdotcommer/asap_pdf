@@ -31,6 +31,33 @@ class Site < ApplicationRecord
       .merge("s3_endpoint" => s3_endpoint)
   end
 
+  def discover_documents!(document_data)
+    document_data.map do |data|
+      url = data[:url]
+      last_modified = data[:last_modified]
+
+      existing_document = documents.find_by(url: url)
+
+      if existing_document
+        if existing_document.last_modified.to_i != last_modified.to_i
+          # Document has changed, reset statuses
+          existing_document.update!(
+            last_modified: last_modified,
+            document_status: "discovered"
+          )
+        end
+        existing_document
+      else
+        documents.create!(
+          url: url,
+          last_modified: last_modified,
+          file_name: File.basename(URI.parse(url).path),
+          document_status: "discovered"
+        )
+      end
+    end
+  end
+
   private
 
   def ensure_safe_url

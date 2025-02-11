@@ -5,12 +5,30 @@ module AsapPdf
   class API < Grape::API::Instance
     format :json
 
-    desc "Return list of sites"
+    rescue_from ActiveRecord::RecordNotFound do |e|
+      error!({error: e.message}, 404)
+    end
+
+    desc "Return list of sites" do
+      detail "Returns a list of all sites in the system"
+      tags ["Sites"]
+      produces ["application/json"]
+      failure [[401, "Unauthorized"], [403, "Forbidden"]]
+    end
     get "/sites" do
       Site.all
     end
 
-    desc "Return a specific site"
+    desc "Return a specific site" do
+      detail "Returns detailed information about a specific site"
+      tags ["Sites"]
+      produces ["application/json"]
+      failure [
+        [401, "Unauthorized"],
+        [403, "Forbidden"],
+        [404, "Site not found"]
+      ]
+    end
     params do
       requires :id, type: Integer, desc: "Site ID"
     end
@@ -18,14 +36,76 @@ module AsapPdf
       Site.find(params[:id])
     end
 
+    desc "Discover documents for a site" do
+      detail "Creates or updates documents for a specific site based on the provided URLs and timestamps"
+      tags ["Documents"]
+      produces ["application/json"]
+      consumes ["application/json"]
+      failure [
+        [400, "Bad Request - Invalid parameters"],
+        [401, "Unauthorized"],
+        [403, "Forbidden"],
+        [404, "Site not found"]
+      ]
+      named "Create Documents"
+    end
+    params do
+      requires :id, type: Integer, desc: "Site ID"
+      requires :documents, type: Array do
+        requires :url, type: String, desc: "Document URL"
+        requires :last_modified, type: DateTime, desc: "Document's last modified timestamp"
+      end
+    end
+    post "/sites/:id/documents" do
+      site = Site.find(params[:id])
+      documents = site.discover_documents!(params[:documents])
+
+      status 201
+      {documents: documents.map { |doc|
+        {
+          id: doc.id,
+          url: doc.url,
+          document_status: doc.document_status,
+          s3_path: doc.s3_path
+        }
+      }}
+    end
+
     add_swagger_documentation(
-      api_version: "v1",
-      hide_documentation_path: true,
       mount_path: "/swagger_doc",
-      hide_format: true,
+      openapi_version: "3.0.1",
       info: {
         title: "ASAP PDF API",
-        description: "API for managing ASAP PDF resources"
+        description: "API for managing ASAP PDF resources and document processing",
+        version: "1.0.0"
+      },
+      tags: [
+        {name: "Sites", description: "Site management operations"},
+        {name: "Documents", description: "Document processing operations"}
+      ],
+      components: {
+        schemas: {
+          Site: {
+            type: "object",
+            properties: {
+              id: {type: "integer", description: "Site ID"},
+              name: {type: "string", description: "Site name"},
+              location: {type: "string", description: "Site location"},
+              primary_url: {type: "string", description: "Primary URL of the site"}
+            },
+            required: ["id", "name", "location", "primary_url"]
+          },
+          Document: {
+            type: "object",
+            properties: {
+              id: {type: "integer", description: "Document ID"},
+              url: {type: "string", description: "Document URL"},
+              document_status: {type: "string", description: "Current status of the document"},
+              s3_path: {type: "string", description: "S3 storage path"}
+            },
+            required: ["id", "url", "document_status", "s3_path"]
+          }
+        }
       }
     )
   end

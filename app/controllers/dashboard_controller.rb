@@ -1,4 +1,4 @@
-class DashboardController < ApplicationController
+class DashboardController < AuthenticatedController
   def index
     @sites = Current.session&.user&.sites
     @documents = Current.session&.user&.documents

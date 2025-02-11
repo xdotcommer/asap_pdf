@@ -3,6 +3,13 @@ class Document < ApplicationRecord
   has_many :workflow_histories, class_name: "DocumentWorkflowHistory"
 
   validates :file_name, presence: true
+  validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp}
+  validates :document_status, presence: true, inclusion: {in: %w[discovered downloaded]}
+  validates :classification_status, presence: true, inclusion: {in: %w[classification_pending auto_classified classified reclassified]}
+  validates :policy_review_status, presence: true, inclusion: {in: %w[policy_pending auto_reviewed reviewed rereviewed]}
+  validates :recommendation_status, presence: true, inclusion: {in: %w[recommendation_pending auto_recommendation recommendation_adjusted recommended]}
+
+  before_validation :set_defaults
 
   def s3_path
     "#{site.s3_endpoint_prefix}/#{id}/document.pdf"
@@ -42,22 +49,6 @@ class Document < ApplicationRecord
       etag: version.etag
     }
   end
-
-  private
-
-  def storage_config
-    @storage_config ||= begin
-      config = Rails.application.config.active_storage.service_configurations[Rails.env.to_s]
-      raise "S3 storage configuration not found for #{Rails.env}" unless config
-      config.symbolize_keys
-    end
-  end
-
-  validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp}
-  validates :document_status, presence: true, inclusion: {in: %w[discovered downloaded]}
-  validates :classification_status, presence: true, inclusion: {in: %w[classification_pending auto_classified classified reclassified]}
-  validates :policy_review_status, presence: true, inclusion: {in: %w[policy_pending auto_reviewed reviewed rereviewed]}
-  validates :recommendation_status, presence: true, inclusion: {in: %w[recommendation_pending auto_recommendation recommendation_adjusted recommended]}
 
   state_machine :document_status, initial: :discovered do
     after_transition any => any do |document, transition|
@@ -154,6 +145,21 @@ class Document < ApplicationRecord
   end
 
   private
+
+  def storage_config
+    @storage_config ||= begin
+      config = Rails.application.config.active_storage.service_configurations[Rails.env.to_s]
+      raise "S3 storage configuration not found for #{Rails.env}" unless config
+      config.symbolize_keys
+    end
+  end
+
+  def set_defaults
+    self.document_status = "discovered" unless document_status
+    self.classification_status = "classification_pending" unless classification_status
+    self.policy_review_status = "policy_pending" unless policy_review_status
+    self.recommendation_status = "recommendation_pending" unless recommendation_status
+  end
 
   def create_workflow_history(transition)
     metadata = case transition.event

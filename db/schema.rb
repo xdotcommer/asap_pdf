@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_03_184701) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_11_153059) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -64,6 +64,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_03_184701) do
     t.float "accessibility_confidence"
     t.string "approved_accessibility_action"
     t.string "changed_accessibility_action"
+    t.datetime "last_modified"
     t.index ["site_id"], name: "index_documents_on_site_id"
   end
 

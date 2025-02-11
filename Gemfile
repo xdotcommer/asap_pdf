@@ -32,13 +32,11 @@ group :development, :test do
   gem "debug", platforms: %i[mri windows], require: "debug/prelude"
   gem "dotenv-rails", "~> 3.1"
   gem "standard"
-  gem "rswag-specs"
 end
 
 group :development do
   gem "better_errors", "~> 2.10.1"
   gem "ruby-lsp", "~> 0.23.8"
-  gem "bullet", "~> 8.0"
   gem "web-console"
   gem "dockerfile-rails", ">= 1.7.2"
   gem "bundler-audit", "~> 0.9.2"
@@ -61,6 +59,3 @@ gem "aws-sdk-s3", "~> 1.141"  # For S3 versioning support
 # API and Documentation
 gem "grape"
 gem "grape-swagger"
-gem "rswag"
-gem "rswag-api"
-gem "rswag-ui"

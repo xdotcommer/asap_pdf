@@ -15,8 +15,7 @@ Rails.application.routes.draw do
   end
 
   mount AsapPdf::API => "/api"
-  mount Rswag::Api::Engine => "/api-docs"
-  mount Rswag::Ui::Engine => "/docs"
+  get "api-docs", to: "api_docs#index"
 
   root "dashboard#index"
 end

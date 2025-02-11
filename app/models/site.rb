@@ -34,12 +34,12 @@ class Site < ApplicationRecord
   def discover_documents!(document_data)
     document_data.map do |data|
       url = data[:url]
-      last_modified = data[:last_modified]
+      modification_date = data[:modification_date]
 
       existing_document = documents.find_by(url: url)
 
       if existing_document
-        if existing_document.last_modified.to_i != last_modified.to_i
+        if existing_document.modification_date.to_i != modification_date.to_i
           # Document has changed, reset statuses
           existing_document.update! attributes_from(data).reverse_merge(
             file_name: clean_string(data[:file_name]) || existing_document.file_name
@@ -59,7 +59,7 @@ class Site < ApplicationRecord
   def attributes_from(data)
     {
       url: data[:url],
-      last_modified: data[:last_modified],
+      modification_date: data[:modification_date],
       file_size: data[:file_size],
       author: clean_string(data[:author]),
       subject: clean_string(data[:subject]),
@@ -67,6 +67,7 @@ class Site < ApplicationRecord
       creation_date: data[:creation_date],
       producer: clean_string(data[:producer]),
       pdf_version: clean_string(data[:pdf_version]),
+      source: data[:source],
       number_of_pages: data[:number_of_pages],
       document_status: "discovered"
     }

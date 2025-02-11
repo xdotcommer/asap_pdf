@@ -31,23 +31,23 @@
               Accessibility</span>
           </span>
         </div>
-        <!-- User Dropdown -->
-        <% if authenticated? %>
-          <div class="relative" data-controller="dropdown">
-            <button data-action="click->dropdown#toggle" class="flex items-center space-x-2 text-gray-700 hover:text-gray-900 focus:outline-none">
-              <i class="fas fa-user-circle text-xl"></i>
-              <span><%= Current.user.email_address %></span>
-              <i class="fas fa-chevron-down text-sm"></i>
-            </button>
-            <div data-dropdown-target="menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-              <div class="py-1">
-                <%= button_to session_path, method: :delete, class: "w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
-                  <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                <% end %>
-              </div>
+        <div class="relative" data-controller="dropdown">
+          <button data-action="click->dropdown#toggle" class="flex items-center space-x-2 text-gray-700 hover:text-gray-900 focus:outline-none">
+            <i class="fas fa-user-circle text-xl"></i>
+            <span><%= Current.user.email_address %></span>
+            <i class="fas fa-chevron-down text-sm"></i>
+          </button>
+          <div data-dropdown-target="menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+            <div class="py-1">
+              <%= link_to sites_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+                <i class="fas fa-globe mr-2"></i>My Sites
+              <% end %>
+              <%= button_to session_path, method: :delete, class: "w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+              <% end %>
             </div>
           </div>
-        <% end %>
+        </div>
       </div>
     </div>
   </nav>
@@ -75,7 +75,7 @@
     <% end %>
   </div>
   <!-- Main Content -->
-  <main>
+  <main class="mt-4">
     <%= yield %>
   </main>
 </body>

@@ -59,8 +59,8 @@ RSpec.describe AsapPdf::API do
     let(:timestamp) { Time.current }
     let(:valid_documents) do
       [
-        {url: "https://example.com/doc1.pdf", last_modified: timestamp},
-        {url: "https://example.com/doc2.pdf", last_modified: timestamp}
+        {url: "https://example.com/doc1.pdf", modification_date: timestamp},
+        {url: "https://example.com/doc2.pdf", modification_date: timestamp}
       ]
     end
 
@@ -87,10 +87,10 @@ RSpec.describe AsapPdf::API do
         expect(first_doc["s3_path"]).to include(site.s3_endpoint_prefix)
       end
 
-      it "updates existing documents when last_modified changes" do
+      it "updates existing documents when modification_date changes" do
         existing_doc = site.documents.create!(
           url: valid_documents.first[:url],
-          last_modified: 1.day.ago,
+          modification_date: 1.day.ago,
           file_name: "doc1.pdf",
           document_status: "discovered"
         )
@@ -106,13 +106,13 @@ RSpec.describe AsapPdf::API do
         expect(existing_doc.classification_status).to eq("classification_pending")
         expect(existing_doc.policy_review_status).to eq("policy_pending")
         expect(existing_doc.recommendation_status).to eq("recommendation_pending")
-        expect(existing_doc.last_modified).to be_within(1.second).of(timestamp)
+        expect(existing_doc.modification_date).to be_within(1.second).of(timestamp)
       end
 
-      it "doesn't modify existing documents when last_modified hasn't changed" do
+      it "doesn't modify existing documents when modification_date hasn't changed" do
         existing_doc = site.documents.create!(
           url: valid_documents.first[:url],
-          last_modified: timestamp,
+          modification_date: timestamp,
           file_name: "doc1.pdf",
           document_status: "discovered"
         )

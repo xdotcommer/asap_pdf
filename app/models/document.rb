@@ -44,7 +44,7 @@ class Document < ApplicationRecord
   def version_metadata(version)
     {
       version_id: version.version_id,
-      last_modified: version.last_modified,
+      modification_date: version.modification_date,
       size: version.size,
       etag: version.etag
     }

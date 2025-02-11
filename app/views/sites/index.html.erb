@@ -2,7 +2,7 @@
   <header>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold leading-tight text-base-content">My Sites</h1>
+        <h1 class="text-gray-600">My Sites</h1>
         <button onclick="add_site_modal.showModal()" class="btn btn-primary">Add Site</button>
       </div>
     </div>
@@ -15,7 +15,7 @@
           <div class="card bg-white shadow-md rounded-lg overflow-hidden relative">
             <div class="p-6 pb-16">
               <h2 class="text-xl font-semibold mb-2">
-                <%= link_to site.name, edit_site_path(site), class: "no-underline hover:underline" %>
+                <%= link_to site.name, site_documents_path(site), class: "no-underline hover:underline" %>
               </h2>
               <div class="space-y-2">
                 <p><%= site.location %></p>

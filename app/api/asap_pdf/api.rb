@@ -53,7 +53,7 @@ module AsapPdf
       requires :id, type: Integer, desc: "Site ID"
       requires :documents, type: Array do
         requires :url, type: String, desc: "Document URL"
-        requires :last_modified, type: DateTime, desc: "Document's last modified timestamp"
+        requires :modification_date, type: DateTime, desc: "Document's last modified timestamp"
       end
     end
     post "/sites/:id/documents" do

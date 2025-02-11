@@ -65,8 +65,8 @@ RSpec.describe Document, type: :model do
       describe "#file_versions" do
         it "returns list of versions" do
           versions = [
-            double("version1", version_id: "v1", last_modified: Time.current, size: 1000, etag: "abc"),
-            double("version2", version_id: "v2", last_modified: 1.day.ago, size: 900, etag: "def")
+            double("version1", version_id: "v1", modification_date: Time.current, size: 1000, etag: "abc"),
+            double("version2", version_id: "v2", modification_date: 1.day.ago, size: 900, etag: "def")
           ]
 
           allow_any_instance_of(Aws::S3::Bucket).to receive(:object_versions)
@@ -79,8 +79,8 @@ RSpec.describe Document, type: :model do
 
       describe "#latest_file" do
         it "returns the most recent version" do
-          latest = double("latest_version", version_id: "v1", last_modified: Time.current)
-          older = double("older_version", version_id: "v2", last_modified: 1.day.ago)
+          latest = double("latest_version", version_id: "v1", modification_date: Time.current)
+          older = double("older_version", version_id: "v2", modification_date: 1.day.ago)
 
           allow_any_instance_of(Aws::S3::Bucket).to receive(:object_versions)
             .with(prefix: document.s3_path)
@@ -107,7 +107,7 @@ RSpec.describe Document, type: :model do
           version = double(
             "version",
             version_id: "v1",
-            last_modified: time,
+            modification_date: time,
             size: 1000,
             etag: "abc123"
           )
@@ -116,7 +116,7 @@ RSpec.describe Document, type: :model do
 
           expect(metadata).to include(
             version_id: "v1",
-            last_modified: time,
+            modification_date: time,
             size: 1000,
             etag: "abc123"
           )

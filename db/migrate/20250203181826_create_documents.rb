@@ -1,10 +1,10 @@
 class CreateDocuments < ActiveRecord::Migration[8.0]
   def change
     create_table :documents do |t|
-      t.string :file_name
-      t.string :url
+      t.text :file_name
+      t.text :url
       t.integer :file_size
-      t.datetime :last_modified_date
+      t.text :source
       t.string :document_status, default: "discovered"
       t.string :classification_status, default: "classification_pending"
       t.string :policy_review_status, default: "policy_pending"
@@ -15,14 +15,14 @@ class CreateDocuments < ActiveRecord::Migration[8.0]
       t.text :accessibility_recommendation
       t.text :accessibility_action
       t.datetime :action_taken_on
-      t.string :title
-      t.string :author
-      t.string :subject
-      t.string :keywords
+      t.text :title
+      t.text :author
+      t.text :subject
+      t.text :keywords
       t.datetime :creation_date
       t.datetime :modification_date
-      t.string :producer
-      t.string :pdf_version
+      t.text :producer
+      t.text :pdf_version
       t.integer :number_of_pages
       t.references :site, null: false, foreign_key: true
 

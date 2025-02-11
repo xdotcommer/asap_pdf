@@ -49,8 +49,9 @@ if Rails.env.development?
         pdf_version: row["version"],
         keywords: row["keywords"],
         creation_date: row["creation_date"],
-        last_modified: row["last_modified_date"],
+        modification_date: row["last_modified_date"],
         producer: row["producer"],
+        source: row["source"],
         number_of_pages: row["number_of_pages"]&.to_i
       }
     rescue URI::InvalidURIError => e

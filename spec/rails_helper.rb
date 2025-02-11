@@ -1,5 +1,6 @@
 require "spec_helper"
 ENV["RAILS_ENV"] ||= "test"
+ENV["RAILS_ENV"] = "test" if ENV["RAILS_ENV"] == "development"
 require_relative "../config/environment"
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require "rspec/rails"
@@ -21,7 +22,7 @@ RSpec.configure do |config|
 
   # Clean the database between tests
   config.before(:each) do
-    Site.delete_all
+    Site.destroy_all
   end
 
   config.filter_rails_from_backtrace!

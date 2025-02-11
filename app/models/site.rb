@@ -1,6 +1,6 @@
 class Site < ApplicationRecord
   belongs_to :user
-  has_many :documents
+  has_many :documents, dependent: :destroy
 
   validates :name, presence: true
   validates :location, presence: true

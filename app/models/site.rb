@@ -41,24 +41,41 @@ class Site < ApplicationRecord
       if existing_document
         if existing_document.last_modified.to_i != last_modified.to_i
           # Document has changed, reset statuses
-          existing_document.update!(
-            last_modified: last_modified,
-            document_status: "discovered"
+          existing_document.update! attributes_from(data).reverse_merge(
+            file_name: clean_string(data[:file_name]) || existing_document.file_name
           )
         end
         existing_document
       else
-        documents.create!(
-          url: url,
-          last_modified: last_modified,
-          file_name: File.basename(URI.parse(url).path),
-          document_status: "discovered"
+        documents.create! attributes_from(data).reverse_merge(
+          file_name: clean_string(data[:file_name]) || File.basename(URI.parse(url).path)
         )
       end
     end
   end
 
   private
+
+  def attributes_from(data)
+    {
+      url: data[:url],
+      last_modified: data[:last_modified],
+      file_size: data[:file_size],
+      author: clean_string(data[:author]),
+      subject: clean_string(data[:subject]),
+      keywords: clean_string(data[:keywords]),
+      creation_date: data[:creation_date],
+      producer: clean_string(data[:producer]),
+      pdf_version: clean_string(data[:pdf_version]),
+      number_of_pages: data[:number_of_pages],
+      document_status: "discovered"
+    }
+  end
+
+  def clean_string(str)
+    return nil if str.nil?
+    str.to_s.encode("UTF-8", invalid: :replace, undef: :replace, replace: "").strip
+  end
 
   def ensure_safe_url
     return if primary_url.blank?

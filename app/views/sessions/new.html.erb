@@ -1,35 +1,42 @@
-<div class="min-h-screen flex items-center justify-center bg-base-100 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8">
-    <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-base-content">
-        Sign in to your account
+<div class="card w-96 bg-base-100 shadow-xl">
+  <div class="card-body">
+    <div class="text-center">
+      <h2 class="text-3xl font-bold mb-4 text-primary">
+        <span class="text-red-900">ASA</span><i class="ml-1 fas fa-file-pdf text-red-900 mr-1"></i>
       </h2>
+      <p class="text-sm text-base-content/70 mb-6">Website PDF Accessibility Checker</p>
     </div>
-    <%= tag.div(flash[:alert], class: "mt-2 text-center text-sm text-error-content") if flash[:alert] %>
-    <%= tag.div(flash[:notice], class: "mt-2 text-center text-sm text-success-content") if flash[:notice] %>
-    <%= form_with url: session_path, class: "mt-8 space-y-6" do |form| %>
-      <div class="rounded-md shadow-sm -space-y-px">
-        <div>
-          <%= form.email_field :email_address,
-              required: true,
-              autofocus: true,
-              autocomplete: "username",
-              placeholder: "Email address",
-              value: params[:email_address],
-              class: "input input-bordered w-full rounded-t-md rounded-b-none" %>
-        </div>
-        <div>
-          <%= form.password_field :password,
-              required: true,
-              autocomplete: "current-password",
-              placeholder: "Password",
-              maxlength: 72,
-              class: "input input-bordered w-full rounded-b-md rounded-t-none" %>
-        </div>
+    <%= form_with url: session_path do |form| %>
+      <div class="form-control w-full">
+        <label class="label">
+          <span class="label-text">Email Address</span>
+        </label>
+        <%= form.email_field :email_address,
+            required: true,
+            autofocus: true,
+            autocomplete: "username",
+            placeholder: "you@example.com",
+            value: params[:email_address],
+            class: "input input-bordered w-full",
+            "aria-required": true %>
       </div>
-      <div>
-        <%= form.submit "Sign in",
-            class: "btn btn-primary w-full" %>
+      <div class="form-control w-full mt-4">
+        <label class="label">
+          <span class="label-text">Password</span>
+        </label>
+        <%= form.password_field :password,
+            required: true,
+            autocomplete: "current-password",
+            placeholder: "Enter your password",
+            maxlength: 72,
+            class: "input input-bordered w-full",
+            "aria-required": true %>
+      </div>
+      <div class="form-control mt-6">
+        <%= form.button type: "submit", class: "btn btn-primary" do %>
+          <i class="fas fa-sign-in-alt mr-2"></i>
+          Login
+        <% end %>
       </div>
     <% end %>
   </div>

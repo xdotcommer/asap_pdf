@@ -5,4 +5,11 @@
 import { application } from "./application"
 
 import HelloController from "./hello_controller"
+import ToastController from "./toast_controller"
+import ModalController from "./modal_controller"
+import DropdownController from "./dropdown_controller"
+
 application.register("hello", HelloController)
+application.register("toast", ToastController)
+application.register("modal", ModalController)
+application.register("dropdown", DropdownController)

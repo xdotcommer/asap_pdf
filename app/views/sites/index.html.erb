@@ -1,55 +1,71 @@
-<div class="min-h-screen bg-base-200">
-  <div class="py-10">
-    <header>
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center">
-          <h1 class="text-3xl font-bold leading-tight text-base-content">Sites</h1>
-          <%= link_to "Add Site", new_site_path, class: "btn btn-primary" %>
-        </div>
+<div class="py-6">
+  <header>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold leading-tight text-base-content">My Sites</h1>
+        <button onclick="add_site_modal.showModal()" class="btn btn-primary">Add Site</button>
       </div>
-    </header>
-    <main>
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="px-4 py-8 sm:px-0">
-          <%= tag.div(flash[:alert], class: "alert alert-error mb-4") if flash[:alert] %>
-          <%= tag.div(flash[:notice], class: "alert alert-success mb-4") if flash[:notice] %>
-          <div class="card bg-base-100 shadow-xl">
-            <div class="card-body">
-              <div class="overflow-x-auto">
-                <table class="table table-zebra w-full">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Location</th>
-                      <th>URL</th>
-                      <th>Documents</th>
-                      <th class="text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @sites.each do |site| %>
-                      <tr>
-                        <td>
-                          <%= link_to site.name, site_path(site), class: "link link-primary" %>
-                        </td>
-                        <td><%= site.location %></td>
-                        <td>
-                          <%= link_to site.primary_url, site.primary_url, target: "_blank", class: "link link-primary" %>
-                        </td>
-                        <td><%= site.documents.count %></td>
-                        <td class="text-right">
-                          <%= link_to "Edit", edit_site_path(site), class: "btn btn-sm btn-outline btn-info" %>
-                          <%= link_to "Delete", site_path(site), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-sm btn-outline btn-error ml-2" %>
-                        </td>
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
+    </div>
+  </header>
+  <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <!-- Sites Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @sites.each do |site| %>
+          <div class="card bg-white shadow-md rounded-lg overflow-hidden relative">
+            <div class="p-6 pb-16">
+              <h2 class="text-xl font-semibold mb-2">
+                <%= link_to site.name, edit_site_path(site), class: "no-underline hover:underline" %>
+              </h2>
+              <div class="space-y-2">
+                <p><%= site.location %></p>
+                <p class="flex items-center gap-1 text-gray-500">
+                  <% display_url = site.primary_url.chomp('/') %>
+                  <%= link_to display_url, display_url, target: "_blank", class: "link link-primary no-underline text-sm hover:underline text-gray-500" %>
+                  <i class="fas fa-external-link-alt text-xs"></i>
+                </p>
+              </div>
+              <!-- Timestamp -->
+              <div class="absolute bottom-4 left-4 text-xs text-gray-500">
+                <i class="fas fa-clock mr-1"></i>
+                Updated <%= time_ago_in_words(site.updated_at) %> ago
+              </div>
+              <!-- Document Count -->
+              <div class="absolute bottom-4 right-4 flex items-center gap-2 text-gray-600">
+                <i class="fas fa-file-alt"></i>
+                <span class="font-medium"><%= site.documents.count %></span>
               </div>
             </div>
           </div>
-        </div>
+        <% end %>
       </div>
-    </main>
+    </div>
   </div>
 </div>
+<!-- Add Site Modal -->
+<dialog id="add_site_modal" class="modal" data-controller="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg mb-4">Add New Site</h3>
+    <%= form_with(model: Site.new, class: "space-y-4", data: { turbo: true }) do |f| %>
+      <div class="form-control">
+        <%= f.label :name, class: "label" %>
+        <%= f.text_field :name, class: "input input-bordered", placeholder: "Enter site name", required: true %>
+      </div>
+      <div class="form-control">
+        <%= f.label :location, class: "label" %>
+        <%= f.text_field :location, class: "input input-bordered", placeholder: "Enter location", required: true %>
+      </div>
+      <div class="form-control">
+        <%= f.label :primary_url, "URL", class: "label" %>
+        <%= f.url_field :primary_url, class: "input input-bordered", placeholder: "https://example.com", required: true %>
+      </div>
+      <div class="modal-action">
+        <button type="button" class="btn btn-ghost mr-2" onclick="add_site_modal.close()">Cancel</button>
+        <%= f.submit "Add Site", class: "btn btn-neutral", data: { action: "click->modal#submitAndClose" } %>
+      </div>
+    <% end %>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

@@ -3,7 +3,7 @@ class SitesController < AuthenticatedController
   before_action :ensure_user_owns_site, only: [:show, :edit, :update, :destroy]
 
   def index
-    @sites = Current.user.sites.order(created_at: :desc)
+    @sites = Current.user.sites.order(name: :asc)
   end
 
   def show
@@ -18,7 +18,7 @@ class SitesController < AuthenticatedController
     @site = Current.user.sites.build(site_params)
 
     if @site.save
-      redirect_to @site, notice: "Site was successfully created."
+      redirect_to sites_path, notice: "Site was successfully created."
     else
       render :new, status: :unprocessable_entity
     end

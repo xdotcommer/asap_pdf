@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Access Pdf Ui" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= yield :head %>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  </head>
+  <body data-theme="lofi" class="bg-base-200 min-h-screen flex items-center justify-center">
+    <!-- Toast Messages -->
+    <div class="fixed top-4 right-4 z-50">
+      <% if flash[:notice] %>
+        <div data-controller="toast" class="transition-all duration-500 ease-in-out">
+          <div data-toast-target="container" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-lg">
+            <p class="font-medium">
+              <i class="fas fa-check-circle mr-2"></i>
+              <%= flash[:notice] %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+      <% if flash[:alert] %>
+        <div data-controller="toast" class="transition-all duration-500 ease-in-out">
+          <div data-toast-target="container" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-lg">
+            <p class="font-medium">
+              <i class="fas fa-exclamation-circle mr-2"></i>
+              <%= flash[:alert] %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <!-- Main Content -->
+    <main>
+      <%= yield %>
+    </main>
+  </body>
+</html>

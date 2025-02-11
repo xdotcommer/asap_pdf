@@ -8,6 +8,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css" rel="stylesheet">
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
     <link rel="icon" href="/icon.png" type="image/png">
@@ -18,7 +19,64 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   </head>
-  <body data-theme="wireframe">
+  <body data-theme="lofi" class="min-h-screen bg-base-200">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <!-- Logo -->
+          <div class="flex-shrink-0 flex items-center">
+            <span class="text-2xl font-bold text-primary">
+              <span class="text-red-900">ASA</span><i class="ml-1 fas fa-file-pdf text-red-900 mr-1"></i>
+              Accessibility</span>
+          </span>
+        </div>
+        <!-- User Dropdown -->
+        <% if authenticated? %>
+          <div class="relative" data-controller="dropdown">
+            <button data-action="click->dropdown#toggle" class="flex items-center space-x-2 text-gray-700 hover:text-gray-900 focus:outline-none">
+              <i class="fas fa-user-circle text-xl"></i>
+              <span><%= Current.user.email_address %></span>
+              <i class="fas fa-chevron-down text-sm"></i>
+            </button>
+            <div data-dropdown-target="menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+              <div class="py-1">
+                <%= button_to session_path, method: :delete, class: "w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+                  <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </nav>
+  <!-- Toast Messages -->
+  <div class="fixed top-4 right-4 z-50">
+    <% if flash[:notice] %>
+      <div data-controller="toast" class="transition-all duration-500 ease-in-out">
+        <div data-toast-target="container" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-lg">
+          <p class="font-medium">
+            <i class="fas fa-check-circle mr-2"></i>
+            <%= flash[:notice] %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div data-controller="toast" class="transition-all duration-500 ease-in-out">
+        <div data-toast-target="container" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-lg">
+          <p class="font-medium">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <%= flash[:alert] %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <!-- Main Content -->
+  <main>
     <%= yield %>
-  </body>
+  </main>
+</body>
 </html>

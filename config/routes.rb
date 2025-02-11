@@ -17,5 +17,5 @@ Rails.application.routes.draw do
   mount AsapPdf::API => "/api"
   get "api-docs", to: "api_docs#index"
 
-  root "dashboard#index"
+  root "sites#index"
 end

@@ -18,7 +18,7 @@ if Rails.env.development?
 
   # Create San Rafael site
   san_rafael = Site.find_or_create_by!(
-    name: "San Rafael, California - The City with a Mission",
+    name: "The City with a Mission",
     location: "San Rafael, CA",
     primary_url: "https://www.cityofsanrafael.org/",
     user: admin

@@ -18,7 +18,7 @@ gem "solid_queue"
 gem "solid_cable"
 
 gem "bootsnap", require: false
-gem "kamal", require: false
+gem "kamal", "~> 2.5", require: false
 gem "thruster", require: false
 gem "redis"
 gem "sidekiq", "~> 7.2"
@@ -35,16 +35,16 @@ group :development, :test do
 end
 
 group :development do
-  gem "better_errors", "~> 2.10.1"
-  gem "ruby-lsp", "~> 0.23.8"
+  gem "better_errors", "~> 2.10"
+  gem "ruby-lsp", "~> 0.23"
   gem "web-console"
-  gem "dockerfile-rails", ">= 1.7.2"
+  gem "dockerfile-rails", ">= 1.7"
   gem "bundler-audit", "~> 0.9.2"
 end
 
 group :test do
   gem "rspec", "~> 3.13"
-  gem "rspec-rails"
+  gem "rspec-rails", "~> 7.1"
   gem "shoulda", "~> 4.0"
   gem "shoulda-matchers", "~> 4.5"
   gem "simplecov", require: false # Optional: for code coverage
@@ -54,8 +54,8 @@ end
 
 gem "bcrypt", "~> 3.1"
 gem "state_machines", "~> 0.6.0"
-gem "aws-sdk-s3", "~> 1.141"  # For S3 versioning support
+gem "aws-sdk-s3", "~> 1.180"  # For S3 versioning support
 
 # API and Documentation
-gem "grape"
+gem "grape", "~> 2.3"
 gem "grape-swagger"

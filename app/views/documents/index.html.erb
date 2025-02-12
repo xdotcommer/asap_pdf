@@ -57,8 +57,49 @@
                                   <dd class="text-sm text-gray-900 col-span-2"><%= document.file_name %></dd>
                                 </div>
                                 <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">URL</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2 break-all"><%= document.url %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">File Size</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= number_to_human_size(document.file_size) %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Pages</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.number_of_pages %></dd>
+                                </div>
+                              </dl>
+                            </div>
+                            <div>
+                              <h3 class="font-medium text-gray-900">PDF Metadata</h3>
+                              <dl class="mt-2 divide-y divide-gray-200">
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Author</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.author %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Subject</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.subject %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Keywords</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.keywords %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Creation Date</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.creation_date&.strftime("%B %d, %Y") %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
                                   <dt class="text-sm font-medium text-gray-500">Last Modified</dt>
                                   <dd class="text-sm text-gray-900 col-span-2"><%= document.modification_date&.strftime("%B %d, %Y") %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Producer</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.producer %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">PDF Version</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.pdf_version %></dd>
                                 </div>
                               </dl>
                             </div>

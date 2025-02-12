@@ -25,13 +25,106 @@
                   <button onclick="pdf_modal_<%= document.id %>.showModal()" class="text-primary-600 hover:text-primary-900" title="Click to view <%= document.file_name %>">
                     <i class="fas fa-file-pdf"></i>
                   </button>
-                  <dialog id="pdf_modal_<%= document.id %>" class="modal">
+                  <dialog id="pdf_modal_<%= document.id %>" class="modal" data-controller="modal">
                     <div class="modal-box w-11/12 max-w-5xl h-[80vh]">
-                      <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-base text-md"><%= document_source(document.source) %></h3>
-                        <button onclick="pdf_modal_<%= document.id %>.close()" class="btn btn-sm btn-circle">✕</button>
+                      <div class="flex flex-col space-y-4">
+                        <div class="flex justify-between items-center">
+                          <div class="flex space-x-2">
+                            <button data-modal-target="pdfButton" data-action="modal#showPdfView" class="px-3 py-1.5 text-sm font-medium rounded-md bg-primary-100 text-primary-700 hover:bg-primary-200">
+                              View PDF
+                            </button>
+                            <button data-modal-target="metadataButton" data-action="modal#showMetadataView" class="px-3 py-1.5 text-sm font-medium rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200">
+                              Document Metadata
+                            </button>
+                          </div>
+                          <button onclick="pdf_modal_<%= document.id %>.close()" class="btn btn-sm btn-circle">✕</button>
+                        </div>
+                        <div data-modal-target="pdfView">
+                          <h3 class="text-base text-md mb-2"><%= document_source(document.source) %></h3>
+                          <iframe src="<%= document.url %>" class="w-full h-[calc(80vh-8rem)]" type="application/pdf"></iframe>
+                        </div>
+                        <div data-modal-target="metadataView" class="hidden h-[calc(80vh-8rem)] overflow-y-auto">
+                          <div class="space-y-4 p-4">
+                            <div>
+                              <h3 class="font-medium text-gray-900">Document Information</h3>
+                              <dl class="mt-2 divide-y divide-gray-200">
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Source</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document_source(document.source) %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">File Name</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.file_name %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Last Modified</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.modification_date&.strftime("%B %d, %Y") %></dd>
+                                </div>
+                              </dl>
+                            </div>
+                            <div>
+                              <h3 class="font-medium text-gray-900">Workflow Status</h3>
+                              <dl class="mt-2 divide-y divide-gray-200">
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Document Status</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.document_status&.humanize %></dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Classification</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2">
+                                    <%= document.classification_status&.humanize %>
+                                    <% if document.category_confidence %>
+                                      <span class="text-gray-500">(Confidence: <%= number_to_percentage(document.category_confidence * 100, precision: 1) %>)</span>
+                                    <% end %>
+                                  </dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Policy Review</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2">
+                                    <%= document.policy_review_status&.humanize %>
+                                    <% if document.accessibility_confidence %>
+                                      <span class="text-gray-500">(Confidence: <%= number_to_percentage(document.accessibility_confidence * 100, precision: 1) %>)</span>
+                                    <% end %>
+                                  </dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Recommendation</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.recommendation_status&.humanize %></dd>
+                                </div>
+                              </dl>
+                            </div>
+                            <div>
+                              <h3 class="font-medium text-gray-900">Classifications & Actions</h3>
+                              <dl class="mt-2 divide-y divide-gray-200">
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Document Category</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2">
+                                    <% if document.changed_category.present? %>
+                                      <%= document.changed_category %> <span class="text-gray-500">(Reclassified)</span>
+                                    <% elsif document.approved_category.present? %>
+                                      <%= document.approved_category %> <span class="text-gray-500">(Approved)</span>
+                                    <% elsif document.recommended_category.present? %>
+                                      <%= document.recommended_category %> <span class="text-gray-500">(Recommended)</span>
+                                    <% end %>
+                                  </dd>
+                                </div>
+                                <div class="py-2 grid grid-cols-3 gap-4">
+                                  <dt class="text-sm font-medium text-gray-500">Accessibility Action</dt>
+                                  <dd class="text-sm text-gray-900 col-span-2">
+                                    <% if document.changed_accessibility_action.present? %>
+                                      <%= document.changed_accessibility_action %> <span class="text-gray-500">(Changed)</span>
+                                    <% elsif document.approved_accessibility_action.present? %>
+                                      <%= document.approved_accessibility_action %> <span class="text-gray-500">(Approved)</span>
+                                    <% elsif document.recommended_accessibility_action.present? %>
+                                      <%= document.recommended_accessibility_action %> <span class="text-gray-500">(Recommended)</span>
+                                    <% end %>
+                                  </dd>
+                                </div>
+                              </dl>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <iframe src="<%= document.url %>" class="w-full h-[calc(100%-4rem)]" type="application/pdf"></iframe>
                     </div>
                     <form method="dialog" class="modal-backdrop">
                       <button>close</button>

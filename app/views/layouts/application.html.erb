@@ -32,7 +32,7 @@
           </span>
         </div>
         <div class="relative" data-controller="dropdown">
-          <button data-action="click->dropdown#toggle" class="flex items-center space-x-2 text-gray-700 hover:text-gray-900 focus:outline-none">
+          <button data-action="click->dropdown#toggle" class="flex items-center space-x-2 text-gray-500 hover:text-gray-900 focus:outline-none">
             <i class="fas fa-user-circle text-xl"></i>
             <span><%= Current.user.email_address %></span>
             <i class="fas fa-chevron-down text-sm"></i>
@@ -75,7 +75,7 @@
     <% end %>
   </div>
   <!-- Main Content -->
-  <main class="mt-4">
+  <main class="mt-6">
     <%= yield %>
   </main>
 </body>

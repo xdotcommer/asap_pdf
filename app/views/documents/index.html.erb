@@ -7,11 +7,11 @@
   <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
     <div class="px-4 py-6 sm:px-0">
       <div class="bg-white shadow-sm rounded-lg overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
+        <table class="min-w-full divide-y divide-gray-200 table-zebra">
           <thead class="bg-gray-50">
             <tr>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PDF</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-96">Source</th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Modified</th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
@@ -21,14 +21,14 @@
           <tbody class="bg-white divide-y divide-gray-200">
             <% @documents.each do |document| %>
               <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                  <button onclick="pdf_modal_<%= document.id %>.showModal()" class="text-primary-600 hover:text-primary-900">
+                <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-500 text-center">
+                  <button onclick="pdf_modal_<%= document.id %>.showModal()" class="text-primary-600 hover:text-primary-900" title="Click to view <%= document.file_name %>">
                     <i class="fas fa-file-pdf"></i>
                   </button>
                   <dialog id="pdf_modal_<%= document.id %>" class="modal">
                     <div class="modal-box w-11/12 max-w-5xl h-[80vh]">
                       <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg"><%= document.file_name %></h3>
+                        <h3 class="text-base text-md"><%= document_source(document.source) %></h3>
                         <button onclick="pdf_modal_<%= document.id %>.close()" class="btn btn-sm btn-circle">✕</button>
                       </div>
                       <iframe src="<%= document.url %>" class="w-full h-[calc(100%-4rem)]" type="application/pdf"></iframe>
@@ -38,9 +38,10 @@
                     </form>
                   </dialog>
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-900"><%= document_source(document.source) %></td>
-                <td class="px-6 py-4 text-sm text-gray-900"><%= document.file_name %></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= document.modification_date&.strftime("%B %d, %Y") %></td>
+                <td class="px-6 py-4 text-sm text-gray-900 w-96"><%= document_source(document.source) %></td>
+                <td class="px-6 py-4 text-sm text-gray-900" title="<%= document.file_name %>"><%= document.file_name&.truncate(50) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= document.modification_date&.strftime("%b %d, %Y") %></td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= document.document_category %></td>
                 <td class="px-6 py-4 text-sm text-gray-500"><%= document.accessibility_recommendation %></td>
               </tr>

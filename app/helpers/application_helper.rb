@@ -6,7 +6,7 @@ module ApplicationHelper
     # Remove trailing slash if present
     path = path.sub(/\/$/, "")
     # Replace forward slashes with &raquo;
-    path.gsub("/", " &raquo; ").html_safe
+    path.gsub("/", " ▸ ") + " ▸ "
   end
 
   def safe_url(url)

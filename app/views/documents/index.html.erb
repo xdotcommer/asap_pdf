@@ -1,19 +1,85 @@
 <div class="py-6">
-  <header>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 class="text-gray-600"><%= @site.location %> (<%= @site.name %>) Documents</h1>
-    </div>
-  </header>
   <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
     <div class="px-4 py-6 sm:px-0">
+      <!-- Filter Form -->
+      <div class="bg-white shadow-sm rounded-lg mb-6">
+        <div class="bg-primary text-white px-6 py-3 rounded-t-lg">
+          <h1 class="text-lg font-medium text-white"><%= @site.location %> (<%= @site.name %>) Documents</h1>
+        </div>
+        <div class="p-6">
+          <%= form_tag site_documents_path(@site), method: :get, class: "space-y-4 search" do %>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="label">
+                  <span class="label-text">Time Frame</span>
+                </label>
+                <div class="flex space-x-2">
+                  <%= date_field_tag :start_date, params[:start_date], class: "input input-bordered w-full", placeholder: "From" %>
+                  <%= date_field_tag :end_date, params[:end_date], class: "input input-bordered w-full", placeholder: "To" %>
+                </div>
+              </div>
+              <div>
+                <label class="label">
+                  <span class="label-text">File Name</span>
+                </label>
+                <%= text_field_tag :filename, params[:filename], class: "input input-bordered w-full", placeholder: "Search by filename..." %>
+              </div>
+              <div>
+                <label class="label">
+                  <span class="label-text">Document Category</span>
+                </label>
+                <%= select_tag :category,
+                  options_for_select([['All Categories', '']] + @document_categories.map { |c| [c, c] }, params[:category]),
+                  class: "select-custom w-full" %>
+              </div>
+            </div>
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-gray-600">
+                Listing <%= @documents.total_count %> of <%= @total_documents %> documents
+              </p>
+              <div>
+                <%= link_to 'Clear Filters', site_documents_path(@site), class: "btn btn-ghost mr-2" %>
+                <%= submit_tag 'Apply Filters', class: "btn btn-outline" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
       <div class="bg-white shadow-sm rounded-lg overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200 table-zebra">
           <thead class="bg-gray-50">
             <tr>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PDF</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-96">Source</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Modified</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-96">
+                <%= link_to site_documents_path(@site, sort: 'source', direction: (params[:sort] == 'source' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date]), class: "group inline-flex items-center" do %>
+                  Source
+                  <% if params[:sort] == 'source' %>
+                    <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
+                  <% else %>
+                    <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
+                  <% end %>
+                <% end %>
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= link_to site_documents_path(@site, sort: 'file_name', direction: (params[:sort] == 'file_name' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date]), class: "group inline-flex items-center" do %>
+                  File Name
+                  <% if params[:sort] == 'file_name' %>
+                    <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
+                  <% else %>
+                    <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
+                  <% end %>
+                <% end %>
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <%= link_to site_documents_path(@site, sort: 'modification_date', direction: (params[:sort] == 'modification_date' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date]), class: "group inline-flex items-center" do %>
+                  Last Modified
+                  <% if params[:sort] == 'modification_date' %>
+                    <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
+                  <% else %>
+                    <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
+                  <% end %>
+                <% end %>
+              </th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Accessibility</th>
             </tr>
@@ -30,10 +96,10 @@
                       <div class="flex flex-col space-y-4">
                         <div class="flex justify-between items-center">
                           <div class="flex space-x-2">
-                            <button data-modal-target="pdfButton" data-action="modal#showPdfView" class="px-3 py-1.5 text-sm font-medium rounded-md bg-primary-100 text-primary-700 hover:bg-primary-200">
+                            <button data-modal-target="pdfButton" data-action="modal#showPdfView" class="btn btn-primary btn-sm">
                               View PDF
                             </button>
-                            <button data-modal-target="metadataButton" data-action="modal#showMetadataView" class="px-3 py-1.5 text-sm font-medium rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            <button data-modal-target="metadataButton" data-action="modal#showMetadataView" class="btn btn-outline btn-sm">
                               Document Metadata
                             </button>
                           </div>

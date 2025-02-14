@@ -31,7 +31,7 @@
       </div>
       <div class="px-4 sm:px-0">
         <%= render partial: "shared/filter", locals: { site: @site, documents: @documents, document_categories: @document_categories, total_documents: @total_documents } %>
-        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+        <div class="bg-white shadow-sm rounded-lg overflow-visible">
           <table class="min-w-full divide-y divide-gray-200 table-zebra">
             <thead class="bg-gray-50">
               <tr>
@@ -99,10 +99,10 @@
                     <input>
                   </td>
                   <td class="px-6 py-4 text-sm text-gray-500 relative" data-controller="status" data-document-id="<%= document.id %>">
-                    <button class="text-gray-500 hover:text-gray-700" data-action="status#toggleMenu">
+                    <button class="text-gray-500 hover:text-gray-700 z-[50]" data-action="status#toggleMenu">
                       <i class="fas fa-ellipsis-v"></i>
                     </button>
-                    <div data-status-target="menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                    <div data-status-target="menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-[100]">
                       <div class="py-1" role="menu">
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-action="status#updateStatus" data-status="">
                           Backlog

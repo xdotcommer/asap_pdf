@@ -37,6 +37,13 @@ class Document < ApplicationRecord
     "Staff report, ordinance, resolution, agreement"
   ].freeze
 
+  DECISION_TYPES = [
+    "Leave as-is",
+    "Convert to web content",
+    "Remove from site",
+    "Remediate PDF"
+  ].freeze
+
   validates :file_name, presence: true
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp}
   validates :document_status, presence: true, inclusion: {in: %w[discovered downloaded]}

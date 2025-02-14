@@ -1,11 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["pdfView", "metadataView", "pdfButton", "metadataButton"]
+  static targets = ["summaryView", "metadataView", "historyView", "summaryButton", "metadataButton", "historyButton"]
 
   connect() {
-    // Initialize with PDF view
-    this.showPdfView()
+    // Initialize with Summary view
+    this.showSummaryView()
   }
 
   submitAndClose(event) {
@@ -19,21 +19,34 @@ export default class extends Controller {
     }
   }
 
-  showPdfView() {
-    this.pdfViewTarget.classList.remove("hidden")
-    this.metadataViewTarget.classList.add("hidden")
-    this.pdfButtonTarget.classList.add("bg-primary-100", "text-primary-700")
-    this.pdfButtonTarget.classList.remove("bg-gray-100", "text-gray-700")
-    this.metadataButtonTarget.classList.add("bg-gray-100", "text-gray-700")
-    this.metadataButtonTarget.classList.remove("bg-primary-100", "text-primary-700")
+  showSummaryView() {
+    this.hideAllViews()
+    this.summaryViewTarget.classList.remove("hidden")
+    this.updateButtonStyles(this.summaryButtonTarget)
   }
 
   showMetadataView() {
-    this.pdfViewTarget.classList.add("hidden")
+    this.hideAllViews()
     this.metadataViewTarget.classList.remove("hidden")
-    this.metadataButtonTarget.classList.add("bg-primary-100", "text-primary-700")
-    this.metadataButtonTarget.classList.remove("bg-gray-100", "text-gray-700")
-    this.pdfButtonTarget.classList.add("bg-gray-100", "text-gray-700")
-    this.pdfButtonTarget.classList.remove("bg-primary-100", "text-primary-700")
+    this.updateButtonStyles(this.metadataButtonTarget)
+  }
+
+  showHistoryView() {
+    this.hideAllViews()
+    this.historyViewTarget.classList.remove("hidden")
+    this.updateButtonStyles(this.historyButtonTarget)
+  }
+
+  hideAllViews() {
+    this.summaryViewTarget.classList.add("hidden")
+    this.metadataViewTarget.classList.add("hidden")
+    this.historyViewTarget.classList.add("hidden")
+  }
+
+  updateButtonStyles(activeButton) {
+    [this.summaryButtonTarget, this.metadataButtonTarget, this.historyButtonTarget].forEach(button => {
+      button.classList.remove("tab-active")
+    })
+    activeButton.classList.add("tab-active")
   }
 }

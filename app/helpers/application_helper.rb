@@ -1,12 +1,19 @@
 module ApplicationHelper
   def document_source(source)
-    return "" unless source
+    return {text: "", url: nil} unless source
+
+    # Store original URL
+    url = source.strip
+
+    # Format the display text
     # Remove protocol and domain, keep path
     path = source.sub(%r{^https?://[^/]+/}, "")
     # Remove trailing slash if present
     path = path.sub(/\/$/, "")
-    # Replace forward slashes with &raquo;
-    path.gsub("/", " ▸ ") + " ▸ "
+    # Replace forward slashes with arrow
+    text = path.gsub("/", " ▸ ")
+
+    {text: text, url: url}
   end
 
   def safe_url(url)

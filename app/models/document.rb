@@ -2,6 +2,41 @@ class Document < ApplicationRecord
   belongs_to :site
   has_many :workflow_histories, class_name: "DocumentWorkflowHistory"
 
+  scope :by_status, ->(status) {
+    case status
+    when "in_review"
+      where(status: "in_review")
+    when "done"
+      where(status: "done")
+    when "", nil
+      where("status IS NULL OR status = ?", "")
+    else
+      all
+    end
+  }
+
+  CONTENT_TYPES = [
+    "Agenda/minutes",
+    "Brochure or handout",
+    "Diagram, graphic, or technical drawing",
+    "Event flyer",
+    "Form",
+    "Form instructions",
+    "Job announcement",
+    "Job description",
+    "Letter and email correspondence",
+    "Map",
+    "Memo or white paper",
+    "Policies, codes, standards",
+    "Presentation slides",
+    "Press release, newsletter",
+    "Procurement announcement and documentation",
+    "Public notice",
+    "Report, plan, or study",
+    "Spreadsheet or table",
+    "Staff report, ordinance, resolution, agreement"
+  ].freeze
+
   validates :file_name, presence: true
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp}
   validates :document_status, presence: true, inclusion: {in: %w[discovered downloaded]}

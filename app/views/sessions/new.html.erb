@@ -1,9 +1,9 @@
 <div class="card w-96 bg-base-100 shadow-xl">
   <div class="card-body">
     <div class="text-center">
-      <h2 class="text-3xl font-bold mb-4 text-primary">
-        <span class="text-red-900">ASA</span><i class="ml-1 fas fa-file-pdf text-red-900 mr-1"></i>
-      </h2>
+      <div class="mb-4">
+        <%= image_tag "logo.png", class: "h-12 mx-auto", alt: "Code for America Logo" %>
+      </div>
       <p class="text-sm text-base-content/70 mb-6">Website PDF Accessibility Checker</p>
     </div>
     <%= form_with url: session_path do |form| %>

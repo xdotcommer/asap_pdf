@@ -11,7 +11,11 @@ Rails.application.routes.draw do
   end
 
   resources :sites do
-    resources :documents, shallow: true
+    resources :documents do
+      member do
+        patch :update_status
+      end
+    end
   end
 
   mount AsapPdf::API => "/api"

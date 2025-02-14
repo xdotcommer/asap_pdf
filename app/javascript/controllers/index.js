@@ -8,8 +8,12 @@ import HelloController from "./hello_controller"
 import ToastController from "./toast_controller"
 import ModalController from "./modal_controller"
 import DropdownController from "./dropdown_controller"
+import FilterController from "./filter_controller"
+import StatusController from "./status_controller"
 
 application.register("hello", HelloController)
 application.register("toast", ToastController)
 application.register("modal", ModalController)
 application.register("dropdown", DropdownController)
+application.register("filter", FilterController)
+application.register("status", StatusController)

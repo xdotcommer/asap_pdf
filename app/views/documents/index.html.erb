@@ -1,255 +1,128 @@
+<% content_for :head do %>
+  <%= tag.meta name: "site-id", content: @site.id %>
+<% end %>
 <div class="py-6">
-  <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-    <div class="px-4 py-6 sm:px-0">
-      <!-- Filter Form -->
-      <div class="bg-white shadow-sm rounded-lg mb-6">
-        <div class="bg-primary text-white px-6 py-3 rounded-t-lg">
-          <h1 class="text-lg font-medium text-white"><%= @site.location %> (<%= @site.name %>) Documents</h1>
-        </div>
-        <div class="p-6">
-          <%= form_tag site_documents_path(@site), method: :get, class: "space-y-4 search" do %>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label class="label">
-                  <span class="label-text">Time Frame</span>
-                </label>
-                <div class="flex space-x-2">
-                  <%= date_field_tag :start_date, params[:start_date], class: "input input-bordered w-full", placeholder: "From" %>
-                  <%= date_field_tag :end_date, params[:end_date], class: "input input-bordered w-full", placeholder: "To" %>
-                </div>
-              </div>
-              <div>
-                <label class="label">
-                  <span class="label-text">File Name</span>
-                </label>
-                <%= text_field_tag :filename, params[:filename], class: "input input-bordered w-full", placeholder: "Search by filename..." %>
-              </div>
-              <div>
-                <label class="label">
-                  <span class="label-text">Document Category</span>
-                </label>
-                <%= select_tag :category,
-                  options_for_select([['All Categories', '']] + @document_categories.map { |c| [c, c] }, params[:category]),
-                  class: "select-custom w-full" %>
-              </div>
+  <div class="mx-auto sm:px-6 lg:px-8">
+    <div class="grid grid-cols-[250px_1fr] gap-6">
+      <div class="bg-white shadow-sm rounded-lg h-fit">
+        <nav class="p-4 space-y-2">
+          <%= link_to site_documents_path(@site, status: ''), class: "flex items-center justify-between p-2 text-gray-700 hover:bg-gray-50 rounded #{params[:status].blank? ? 'bg-gray-100' : ''}" do %>
+            <div class="flex items-center">
+              <i class="fas fa-inbox w-5"></i>
+              <span class="ml-2">Backlog</span>
             </div>
-            <div class="flex justify-between items-center">
-              <p class="text-sm text-gray-600">
-                Listing <%= @documents.total_count %> of <%= @total_documents %> documents
-              </p>
-              <div>
-                <%= link_to 'Clear Filters', site_documents_path(@site), class: "btn btn-ghost mr-2" %>
-                <%= submit_tag 'Apply Filters', class: "btn btn-outline" %>
-              </div>
-            </div>
+            <span class="bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs"><%= @site.documents.by_status('').count %></span>
           <% end %>
-        </div>
+          <%= link_to site_documents_path(@site, status: 'in_review'), class: "flex items-center justify-between p-2 text-gray-700 hover:bg-gray-50 rounded #{params[:status] == 'in_review' ? 'bg-gray-100' : ''}" do %>
+            <div class="flex items-center">
+              <i class="fas fa-clock w-5"></i>
+              <span class="ml-2">In Review</span>
+            </div>
+            <span class="bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs"><%= @site.documents.by_status('in_review').count %></span>
+          <% end %>
+          <%= link_to site_documents_path(@site, status: 'done'), class: "flex items-center justify-between p-2 text-gray-700 hover:bg-gray-50 rounded #{params[:status] == 'done' ? 'bg-gray-100' : ''}" do %>
+            <div class="flex items-center">
+              <i class="fas fa-check w-5"></i>
+              <span class="ml-2">Done</span>
+            </div>
+            <span class="bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-xs"><%= @site.documents.by_status('done').count %></span>
+          <% end %>
+        </nav>
       </div>
-      <div class="bg-white shadow-sm rounded-lg overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200 table-zebra">
-          <thead class="bg-gray-50">
-            <tr>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PDF</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-96">
-                <%= link_to site_documents_path(@site, sort: 'source', direction: (params[:sort] == 'source' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date]), class: "group inline-flex items-center" do %>
-                  Source
-                  <% if params[:sort] == 'source' %>
-                    <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
-                  <% else %>
-                    <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
-                  <% end %>
-                <% end %>
-              </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <%= link_to site_documents_path(@site, sort: 'file_name', direction: (params[:sort] == 'file_name' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date]), class: "group inline-flex items-center" do %>
-                  File Name
-                  <% if params[:sort] == 'file_name' %>
-                    <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
-                  <% else %>
-                    <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
-                  <% end %>
-                <% end %>
-              </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <%= link_to site_documents_path(@site, sort: 'modification_date', direction: (params[:sort] == 'modification_date' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date]), class: "group inline-flex items-center" do %>
-                  Last Modified
-                  <% if params[:sort] == 'modification_date' %>
-                    <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
-                  <% else %>
-                    <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
-                  <% end %>
-                <% end %>
-              </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Accessibility</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% @documents.each do |document| %>
+      <div class="px-4 sm:px-0">
+        <%= render partial: "shared/filter", locals: { site: @site, documents: @documents, document_categories: @document_categories, total_documents: @total_documents } %>
+        <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-200 table-zebra">
+            <thead class="bg-gray-50">
               <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-500 text-center">
-                  <button onclick="pdf_modal_<%= document.id %>.showModal()" class="text-primary-600 hover:text-primary-900" title="Click to view <%= document.file_name %>">
-                    <i class="fas fa-file-pdf"></i>
-                  </button>
-                  <dialog id="pdf_modal_<%= document.id %>" class="modal" data-controller="modal">
-                    <div class="modal-box w-11/12 max-w-5xl h-[80vh]">
-                      <div class="flex flex-col space-y-4">
-                        <div class="flex justify-between items-center">
-                          <div class="flex space-x-2">
-                            <button data-modal-target="pdfButton" data-action="modal#showPdfView" class="btn btn-primary btn-sm">
-                              View PDF
-                            </button>
-                            <button data-modal-target="metadataButton" data-action="modal#showMetadataView" class="btn btn-outline btn-sm">
-                              Document Metadata
-                            </button>
-                          </div>
-                          <button onclick="pdf_modal_<%= document.id %>.close()" class="btn btn-sm btn-circle">✕</button>
-                        </div>
-                        <div data-modal-target="pdfView">
-                          <h3 class="text-base text-md mb-2"><%= document_source(document.source) %></h3>
-                          <iframe src="<%= document.url %>" class="w-full h-[calc(80vh-8rem)]" type="application/pdf"></iframe>
-                        </div>
-                        <div data-modal-target="metadataView" class="hidden h-[calc(80vh-8rem)] overflow-y-auto">
-                          <div class="space-y-4 p-4">
-                            <div>
-                              <h3 class="font-medium text-gray-900">Document Information</h3>
-                              <dl class="mt-2 divide-y divide-gray-200">
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Source</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document_source(document.source) %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">File Name</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.file_name %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">URL</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2 break-all"><%= document.url %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">File Size</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= number_to_human_size(document.file_size) %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Pages</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.number_of_pages %></dd>
-                                </div>
-                              </dl>
-                            </div>
-                            <div>
-                              <h3 class="font-medium text-gray-900">PDF Metadata</h3>
-                              <dl class="mt-2 divide-y divide-gray-200">
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Author</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.author %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Subject</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.subject %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Keywords</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.keywords %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Creation Date</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.creation_date&.strftime("%B %d, %Y") %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Last Modified</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.modification_date&.strftime("%B %d, %Y") %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Producer</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.producer %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">PDF Version</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.pdf_version %></dd>
-                                </div>
-                              </dl>
-                            </div>
-                            <div>
-                              <h3 class="font-medium text-gray-900">Workflow Status</h3>
-                              <dl class="mt-2 divide-y divide-gray-200">
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Document Status</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.document_status&.humanize %></dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Classification</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2">
-                                    <%= document.classification_status&.humanize %>
-                                    <% if document.category_confidence %>
-                                      <span class="text-gray-500">(Confidence: <%= number_to_percentage(document.category_confidence * 100, precision: 1) %>)</span>
-                                    <% end %>
-                                  </dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Policy Review</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2">
-                                    <%= document.policy_review_status&.humanize %>
-                                    <% if document.accessibility_confidence %>
-                                      <span class="text-gray-500">(Confidence: <%= number_to_percentage(document.accessibility_confidence * 100, precision: 1) %>)</span>
-                                    <% end %>
-                                  </dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Recommendation</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2"><%= document.recommendation_status&.humanize %></dd>
-                                </div>
-                              </dl>
-                            </div>
-                            <div>
-                              <h3 class="font-medium text-gray-900">Classifications & Actions</h3>
-                              <dl class="mt-2 divide-y divide-gray-200">
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Document Category</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2">
-                                    <% if document.changed_category.present? %>
-                                      <%= document.changed_category %> <span class="text-gray-500">(Reclassified)</span>
-                                    <% elsif document.approved_category.present? %>
-                                      <%= document.approved_category %> <span class="text-gray-500">(Approved)</span>
-                                    <% elsif document.recommended_category.present? %>
-                                      <%= document.recommended_category %> <span class="text-gray-500">(Recommended)</span>
-                                    <% end %>
-                                  </dd>
-                                </div>
-                                <div class="py-2 grid grid-cols-3 gap-4">
-                                  <dt class="text-sm font-medium text-gray-500">Accessibility Action</dt>
-                                  <dd class="text-sm text-gray-900 col-span-2">
-                                    <% if document.changed_accessibility_action.present? %>
-                                      <%= document.changed_accessibility_action %> <span class="text-gray-500">(Changed)</span>
-                                    <% elsif document.approved_accessibility_action.present? %>
-                                      <%= document.approved_accessibility_action %> <span class="text-gray-500">(Approved)</span>
-                                    <% elsif document.recommended_accessibility_action.present? %>
-                                      <%= document.recommended_accessibility_action %> <span class="text-gray-500">(Recommended)</span>
-                                    <% end %>
-                                  </dd>
-                                </div>
-                              </dl>
-                            </div>
-                          </div>
-                        </div>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PDF</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <%= link_to site_documents_path(@site, sort: 'file_name', direction: (params[:sort] == 'file_name' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date], status: params[:status]), class: "group inline-flex items-center" do %>
+                    File Name
+                    <% if params[:sort] == 'file_name' %>
+                      <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
+                    <% else %>
+                      <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
+                    <% end %>
+                  <% end %>
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <%= link_to site_documents_path(@site, sort: 'source', direction: (params[:sort] == 'source' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date], status: params[:status]), class: "group inline-flex items-center" do %>
+                    Web Page
+                    <% if params[:sort] == 'source' %>
+                      <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
+                    <% else %>
+                      <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
+                    <% end %>
+                  <% end %>
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <%= link_to site_documents_path(@site, sort: 'modification_date', direction: (params[:sort] == 'modification_date' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date], status: params[:status]), class: "group inline-flex items-center" do %>
+                    Last Modified
+                    <% if params[:sort] == 'modification_date' %>
+                      <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
+                    <% else %>
+                      <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
+                    <% end %>
+                  <% end %>
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Decision</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Move</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @documents.each do |document| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-500 text-center">
+                    <button onclick="pdf_modal_<%= document.id %>.showModal()" class="text-primary-600 hover:text-primary-900" title="Click to view <%= document.file_name %>">
+                      <i class="fas fa-file-pdf"></i>
+                    </button>
+                    <%= render partial: "documents/pdf_modal", locals: { document: document } %>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-900" title="<%= document.file_name %>"><%= document.file_name&.truncate(80) %>
+                  </td>
+                  <% source = document_source(document.source) %>
+                  <td class="px-6 py-4 text-sm text-gray-900 w-96">
+                    <%= source[:text] %>
+                    <% if source[:url].present? %>
+                      <a href="<%= source[:url] %>" target="_blank" rel="noopener noreferrer" class="ml-1 text-primary-600 hover:text-primary-900" title="Open source in new tab">
+                        <i class="fas fa-external-link-alt text-sm"></i>
+                      </a>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= document.modification_date&.strftime("%b %d, %Y") %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= document.document_category %></td>
+                  <td class="px-6 py-4 text-sm text-gray-500"><%= document.accessibility_recommendation %></td>
+                  <td class="px-6 py-4 text-sm text-gray-500">
+                    <input>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-500 relative" data-controller="status" data-document-id="<%= document.id %>">
+                    <button class="text-gray-500 hover:text-gray-700" data-action="status#toggleMenu">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div data-status-target="menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                      <div class="py-1" role="menu">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-action="status#updateStatus" data-status="">
+                          Backlog
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-action="status#updateStatus" data-status="in_review">
+                          In Review
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-action="status#updateStatus" data-status="done">
+                          Done
+                        </a>
                       </div>
                     </div>
-                    <form method="dialog" class="modal-backdrop">
-                      <button>close</button>
-                    </form>
-                  </dialog>
-                </td>
-                <td class="px-6 py-4 text-sm text-gray-900 w-96"><%= document_source(document.source) %></td>
-                <td class="px-6 py-4 text-sm text-gray-900" title="<%= document.file_name %>"><%= document.file_name&.truncate(50) %>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= document.modification_date&.strftime("%b %d, %Y") %></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= document.document_category %></td>
-                <td class="px-6 py-4 text-sm text-gray-500"><%= document.accessibility_recommendation %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-        <div class="px-6 py-4 border-t">
-          <%= paginate @documents %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <div class="px-6 py-4 border-t">
+            <%= paginate @documents %>
+          </div>
         </div>
       </div>
     </div>

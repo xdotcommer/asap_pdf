@@ -15,6 +15,23 @@ class Document < ApplicationRecord
     end
   }
 
+  scope :by_filename, ->(filename) {
+    return all if filename.blank?
+    where("file_name ILIKE ?", "%#{filename}%")
+  }
+
+  scope :by_category, ->(category) {
+    return all if category.blank?
+    where(document_category: category)
+  }
+
+  scope :by_date_range, ->(start_date, end_date) {
+    scope = all
+    scope = scope.where("modification_date >= ?", start_date) if start_date.present?
+    scope = scope.where("modification_date <= ?", end_date) if end_date.present?
+    scope
+  }
+
   CONTENT_TYPES = [
     "Agreement", "Agenda", "Brochure", "Diagram", "Flyer", "Form", "Form Instruction",
     "Job Announcement", "Job Description", "Letter", "Map", "Memo", "Policy", "Slides",

@@ -8,6 +8,9 @@ class DocumentsController < AuthenticatedController
   def index
     @documents = @site.documents
       .by_status(params[:status])
+      .by_filename(params[:filename])
+      .by_category(params[:category])
+      .by_date_range(params[:start_date], params[:end_date])
       .order(sort_column => sort_direction)
       .page(params[:page])
 

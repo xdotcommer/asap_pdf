@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     member do
       patch :update_document_category
       patch :update_accessibility_recommendation
+      patch :update_notes
     end
   end
 

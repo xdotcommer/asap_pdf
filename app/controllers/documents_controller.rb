@@ -1,8 +1,8 @@
 class DocumentsController < AuthenticatedController
   protect_from_forgery with: :exception
-  skip_before_action :verify_authenticity_token, only: [:update_document_category, :update_accessibility_recommendation, :update_status]
-  before_action :set_site, except: [:update_document_category, :update_accessibility_recommendation]
-  before_action :set_document_for_update, only: [:update_document_category, :update_accessibility_recommendation]
+  skip_before_action :verify_authenticity_token, only: [:update_document_category, :update_accessibility_recommendation, :update_status, :update_notes]
+  before_action :set_site, except: [:update_document_category, :update_accessibility_recommendation, :update_notes]
+  before_action :set_document_for_update, only: [:update_document_category, :update_accessibility_recommendation, :update_notes]
   before_action :set_document, only: []
 
   def index
@@ -32,6 +32,16 @@ class DocumentsController < AuthenticatedController
     if @document.update_column(:accessibility_recommendation, params[:value])
       render json: {
         display_text: params[:value].present? ? params[:value] : "undetermined"
+      }
+    else
+      render json: {error: @document.errors.full_messages}, status: :unprocessable_entity
+    end
+  end
+
+  def update_notes
+    if @document.update(notes: params[:document][:notes])
+      render json: {
+        display_text: params[:document][:notes].present? ? params[:document][:notes] : "No notes"
       }
     else
       render json: {error: @document.errors.full_messages}, status: :unprocessable_entity

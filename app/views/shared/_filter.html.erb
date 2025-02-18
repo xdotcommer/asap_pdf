@@ -1,20 +1,19 @@
-<div class="bg-white shadow-sm rounded-lg mb-6" data-controller="filter">
-  <div class="px-6 py-3 rounded-t-lg flex justify-between items-center">
-    <h1 class="text-lg font-medium"><%= site.location %>: <%= site.name %> </h1>
-    <button class="btn btn-sm border-none" data-action="filter#toggle">
-      <i class="fas fa-filter mr-1"></i>
-      Filter
+<div class="bg-white shadow-sm rounded-lg" data-controller="filter">
+  <div class="px-2 py-3 rounded-t-lg flex justify-end">
+    <button class="btn btn-sm btn-ghost text-gray-600" data-action="filter#toggle">
+      Filter Results
+      <i class="fas fa-chevron-down"></i>
     </button>
   </div>
-  <div class="p-6 transition-opacity border-t border-base-200 duration-150 ease-in-out hidden" data-filter-target="content">
+  <div class="p-6 pt-0 transition-opacity border-t border-base-200 duration-150 ease-in-out hidden" data-filter-target="content">
     <%= form_tag site_documents_path(site), method: :get, class: "space-y-4 search", data: { action: "submit->filter#submitForm" } do %>
       <%= hidden_field_tag :status, params[:status] %>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 gap-4">
         <div>
           <label class="label">
             <span class="label-text">Time Frame</span>
           </label>
-          <div class="flex space-x-2">
+          <div class="space-y-2">
             <%= date_field_tag :start_date, params[:start_date], class: "input input-bordered w-full", placeholder: "From" %>
             <%= date_field_tag :end_date, params[:end_date], class: "input input-bordered w-full", placeholder: "To" %>
           </div>
@@ -36,15 +35,15 @@
       </div>
       <div class="flex justify-end pt-4">
         <div>
-          <%= link_to 'Clear Filters', site_documents_path(site), class: "btn btn-ghost mr-2", data: { action: "filter#clearFilters" } %>
+          <%= link_to 'Clear', site_documents_path(site), class: "btn btn-ghost", data: { action: "filter#clearFilters" } %>
           <%= submit_tag 'Apply Filters', class: "btn btn btn-primary" %>
         </div>
       </div>
     <% end %>
   </div>
   <div class="px-6 py-4 border-t">
-    <p class="text-sm text-gray-600">
-      <i>Showing <%= documents.total_count %> of <%= total_documents %> documents</i>
+    <p class="text-sm text-gray-500 flex-right">
+      <i>Showing <%= short_number documents.total_count %> Documents</i>
     </p>
   </div>
 </div>

@@ -15,34 +15,13 @@ class Document < ApplicationRecord
     end
   }
 
-  CONTENT_TYPES = {
-    agreement: "Staff report, ordinance, resolution, agreement",
-    agenda: "Agenda/minutes",
-    brochure: "Brochure or handout",
-    diagram: "Diagram, graphic, or technical drawing",
-    flyer: "Event flyer",
-    form: "Form",
-    form_instruction: "Form instructions",
-    job_announcement: "Job announcement",
-    job_description: "Job description",
-    letter: "Letter and email correspondence",
-    map: "Map",
-    memo: "Memo or white paper",
-    policy: "Policies, codes, standards",
-    slides: "Presentation slides",
-    press: "Press release, newsletter",
-    procurement: "Procurement announcement and documentation",
-    notice: "Public notice",
-    report: "Report, plan, or study",
-    spreadsheet: "Spreadsheet or table"
-  }.freeze
+  CONTENT_TYPES = [
+    "Agreement", "Agenda", "Brochure", "Diagram", "Flyer", "Form", "Form Instruction",
+    "Job Announcement", "Job Description", "Letter", "Map", "Memo", "Policy", "Slides",
+    "Press", "Procurement", "Notice", "Report", "Spreadsheet"
+  ].freeze
 
-  DECISION_TYPES = {
-    leave: "Leave as-is",
-    convert: "Convert to web content",
-    remove: "Remove from site",
-    remediate: "Remediate PDF"
-  }.freeze
+  DECISION_TYPES = ["Leave", "Convert", "Remove", "Remediate"].freeze
 
   validates :file_name, presence: true
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp}
@@ -50,6 +29,8 @@ class Document < ApplicationRecord
   validates :classification_status, presence: true, inclusion: {in: %w[classification_pending auto_classified classified reclassified]}
   validates :policy_review_status, presence: true, inclusion: {in: %w[policy_pending auto_reviewed reviewed rereviewed]}
   validates :recommendation_status, presence: true, inclusion: {in: %w[recommendation_pending auto_recommendation recommendation_adjusted recommended]}
+  validates :document_category, inclusion: {in: CONTENT_TYPES}, allow_nil: true
+  validates :accessibility_recommendation, inclusion: {in: DECISION_TYPES}, allow_nil: true
 
   before_validation :set_defaults
 

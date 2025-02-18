@@ -10,6 +10,7 @@ import ModalController from "./modal_controller"
 import DropdownController from "./dropdown_controller"
 import FilterController from "./filter_controller"
 import StatusController from "./status_controller"
+import DropdownEditController from "./dropdown_edit_controller"
 
 application.register("hello", HelloController)
 application.register("toast", ToastController)
@@ -17,3 +18,4 @@ application.register("modal", ModalController)
 application.register("dropdown", DropdownController)
 application.register("filter", FilterController)
 application.register("status", StatusController)
+application.register("dropdown-edit", DropdownEditController)

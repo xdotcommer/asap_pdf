@@ -91,52 +91,60 @@
                     </div>
                   </td>
                   <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-500"><%= document.modification_date&.strftime("%b %d, %Y") %></td>
-                  <td class="px-6 py-4 text-sm text-gray-500">
-                    <span class="text-xs font-normal">
-                      <i class="fas fa-wand-magic-sparkles"></i>
-                    </span>
-                    Job Announcement
-                    <%#= document.document_category %>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-gray-500">
-                    <span class="text-xs font-normal">
-                      <i class="fas fa-wand-magic-sparkles"></i>
-                    </span>
-                    Convert
-                    <%#= document.accessibility_recommendation %>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-gray-500">
-                    <p class="min-w-32">
-                      These are notes on this document I should remember to reach out to... @ whatever agency...
-                    </p>
-                  </td>
-                  <td class="px-6 py-4 text-sm text-gray-500 relative" data-controller="status" data-document-id="<%= document.id %>">
-                    <button class="text-gray-500 hover:text-gray-700 z-[50]" data-action="status#toggleMenu">
-                      <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <div data-status-target="menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-[100]">
-                      <div class="py-1" role="menu">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-action="status#updateStatus" data-status="">
-                          Backlog
-                        </a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-action="status#updateStatus" data-status="in_review">
-                          In Review
-                        </a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-action="status#updateStatus" data-status="done">
-                          Done
-                        </a>
-                      </div>
+                  <td class="px-6 py-4 text-sm text-gray-500" data-controller="dropdown-edit" data-dropdown-edit-document-id-value="<%= document.id %>" data-dropdown-edit-field-value="document_category">
+                    <div data-action="click->dropdown-edit#showSelect" data-dropdown-edit-target="display" class="cursor-pointer hover:underline">
+                      <%= document.document_category.present? ? document.document_category : "uncategorized" %>
                     </div>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-          <div class="px-6 py-4 border-t">
-            <%= paginate @documents %>
+                    <select data-dropdown-edit-target="select" data-action="change->dropdown-edit#updateValue blur->dropdown-edit#hideSelect" class="hidden w-[125%] bg-white border border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 p-2">
+                      <option value="">uncategorized</option>
+                      <% Document::CONTENT_TYPES.each do |key| %>
+                        <option value="<%= key %>" <%= document.document_category == key ? 'selected' : '' %>><%= key %></option>
+                        <% end %>
+                      </select>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500" data-controller="dropdown-edit" data-dropdown-edit-document-id-value="<%= document.id %>" data-dropdown-edit-field-value="accessibility_recommendation">
+                      <div data-action="click->dropdown-edit#showSelect" data-dropdown-edit-target="display" class="cursor-pointer hover:underline">
+                        <%= document.accessibility_recommendation.present? ? document.accessibility_recommendation : "undetermined" %>
+                      </div>
+                      <select data-dropdown-edit-target="select" data-action="change->dropdown-edit#updateValue blur->dropdown-edit#hideSelect" class="hidden w-[125%] bg-white border border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 p-2">
+                        <option value="">undetermined</option>
+                        <% Document::DECISION_TYPES.each do |key| %>
+                          <option value="<%= key %>" <%= document.accessibility_recommendation == key ? 'selected' : '' %>><%= key %></option>
+                          <% end %>
+                        </select>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-500">
+                        <p class="min-w-32">
+                          These are notes on this document I should remember to reach out to... @ whatever agency...
+                        </p>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-500 relative" data-controller="status" data-document-id="<%= document.id %>">
+                        <button class="text-gray-500 hover:text-gray-700 z-[50]" data-action="status#toggleMenu">
+                          <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div data-status-target="menu" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-[100]">
+                          <div class="py-1" role="menu">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-action="status#updateStatus" data-status="">
+                              Backlog
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-action="status#updateStatus" data-status="in_review">
+                              In Review
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-action="status#updateStatus" data-status="done">
+                              Done
+                            </a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              <div class="px-6 py-4 border-t">
+                <%= paginate @documents %>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>

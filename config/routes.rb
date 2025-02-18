@@ -18,6 +18,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :documents, only: [] do
+    member do
+      patch :update_document_category
+      patch :update_accessibility_recommendation
+    end
+  end
+
   mount AsapPdf::API => "/api"
   get "api-docs", to: "api_docs#index"
 

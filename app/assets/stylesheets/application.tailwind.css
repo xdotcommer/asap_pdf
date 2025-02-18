@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes success-scale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes success-fade {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.success-animation {
+  animation: success-scale 0.5s ease-out;
+}
+
+.success-icon {
+  animation: success-fade 0.8s ease-out forwards;
+}
+
 @layer base {
   h1 {
     @apply text-2xl font-medium text-gray-500 leading-tight text-base-content;

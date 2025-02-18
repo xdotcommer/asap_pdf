@@ -15,34 +15,34 @@ class Document < ApplicationRecord
     end
   }
 
-  CONTENT_TYPES = [
-    "Agenda/minutes",
-    "Brochure or handout",
-    "Diagram, graphic, or technical drawing",
-    "Event flyer",
-    "Form",
-    "Form instructions",
-    "Job announcement",
-    "Job description",
-    "Letter and email correspondence",
-    "Map",
-    "Memo or white paper",
-    "Policies, codes, standards",
-    "Presentation slides",
-    "Press release, newsletter",
-    "Procurement announcement and documentation",
-    "Public notice",
-    "Report, plan, or study",
-    "Spreadsheet or table",
-    "Staff report, ordinance, resolution, agreement"
-  ].freeze
+  CONTENT_TYPES = {
+    agreement: "Staff report, ordinance, resolution, agreement",
+    agenda: "Agenda/minutes",
+    brochure: "Brochure or handout",
+    diagram: "Diagram, graphic, or technical drawing",
+    flyer: "Event flyer",
+    form: "Form",
+    form_instruction: "Form instructions",
+    job_announcement: "Job announcement",
+    job_description: "Job description",
+    letter: "Letter and email correspondence",
+    map: "Map",
+    memo: "Memo or white paper",
+    policy: "Policies, codes, standards",
+    slides: "Presentation slides",
+    press: "Press release, newsletter",
+    procurement: "Procurement announcement and documentation",
+    notice: "Public notice",
+    report: "Report, plan, or study",
+    spreadsheet: "Spreadsheet or table"
+  }.freeze
 
-  DECISION_TYPES = [
-    "Leave as-is",
-    "Convert to web content",
-    "Remove from site",
-    "Remediate PDF"
-  ].freeze
+  DECISION_TYPES = {
+    leave: "Leave as-is",
+    convert: "Convert to web content",
+    remove: "Remove from site",
+    remediate: "Remediate PDF"
+  }.freeze
 
   validates :file_name, presence: true
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp}

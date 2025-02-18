@@ -1,10 +1,10 @@
 <dialog id="pdf_modal_<%= document.id %>" class="modal" data-controller="modal">
-  <div class="modal-box w-11/12 max-w-5xl h-[80vh]">
+  <div class="modal-box w-11/12 max-w-[900px] h-[90vh]">
     <div class="flex flex-col space-y-4">
       <!-- Title and URL Section -->
-      <div class="flex items-start justify-between border-b pb-2">
+      <div class="flex items-start justify-between border-b pb-1">
         <div class="flex flex-col items-start">
-          <h2 class="text-lg font-semibold text-left">Title: <%= document.file_name %></h2>
+          <h2 class="text-md font-semibold text-left">Title: <%= document.file_name %></h2>
           <div class="text-sm text-gray-600 flex items-center">
             <% source = document_source(document.source) %>
             <span class="text-left">Web Page: <%= source[:text] %></span>
@@ -15,7 +15,7 @@
             <% end %>
           </div>
         </div>
-        <button onclick="pdf_modal_<%= document.id %>.close()" class="btn btn-sm btn-circle ml-4">✕</button>
+        <button onclick="pdf_modal_<%= document.id %>.close()" class="btn btn-sm btn-circle">✕</button>
       </div>
       <!-- Tab Navigation -->
       <div class="tabs tabs-bordered">
@@ -33,16 +33,16 @@
       <div data-modal-target="summaryView">
         <!-- Summary Input Area -->
         <div class="flex space-x-2 items-start mb-4">
-          <textarea class="textarea textarea-bordered flex-1 h-20" placeholder="Enter or view document summary..."></textarea>
+          <textarea class="textarea textarea-bordered flex-1 h-20 mb-2" placeholder="Enter or view document summary..."></textarea>
           <button class="btn btn-primary btn-sm">
             <i class="fas fa-wand-magic-sparkles mr-1"></i>
             Summarize
           </button>
         </div>
-        <iframe src="<%= document.url %>" class="w-full h-[calc(80vh-8rem)]" type="application/pdf"></iframe>
+        <iframe src="<%= document.url %>#pagemode=none&toolbar=1" class="w-full h-[calc(90vh-8rem)]" type="application/pdf"></iframe>
       </div>
       <!-- PDF Details View -->
-      <div data-modal-target="metadataView" class="hidden h-[calc(80vh-12rem)] overflow-y-auto">
+      <div data-modal-target="metadataView" class="hidden h-[calc(90vh-12rem)] overflow-y-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
           <!-- PDF Metadata -->
           <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
@@ -125,7 +125,7 @@
         </div>
       </div>
       <!-- History View -->
-      <div data-modal-target="historyView" class="hidden h-[calc(80vh-12rem)] overflow-y-auto">
+      <div data-modal-target="historyView" class="hidden h-[calc(90vh-12rem)] overflow-y-auto">
         <div class="space-y-4 p-4">
           <h3 class="font-medium text-gray-900">Document History</h3>
           <div class="space-y-2">

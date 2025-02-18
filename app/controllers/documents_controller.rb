@@ -5,7 +5,7 @@ class DocumentsController < AuthenticatedController
     @site = Site.find(params[:site_id])
     @documents = @site.documents.by_status(params[:status])
     @total_documents = @documents.count
-    @document_categories = Document::CONTENT_TYPES
+    @document_categories = Document::CONTENT_TYPES.keys
 
     # Apply filters
     if params[:category].present?

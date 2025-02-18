@@ -30,7 +30,7 @@
             <span class="label-text">Document Category</span>
           </label>
           <%= select_tag :category,
-                  options_for_select([['All Categories', '']] + document_categories.map { |c| [c, c] }, params[:category]),
+                  options_for_select([['All Categories', '']] + document_categories.map { |c| [c.to_s.titleize, c] }, params[:category]),
                   class: "select-custom w-full" %>
         </div>
       </div>

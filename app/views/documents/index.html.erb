@@ -36,20 +36,10 @@
             <thead class="bg-gray-50">
               <tr>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PDF</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-[40%]">
                   <%= link_to site_documents_path(@site, sort: 'file_name', direction: (params[:sort] == 'file_name' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date], status: params[:status]), class: "group inline-flex items-center" do %>
                     File Name
                     <% if params[:sort] == 'file_name' %>
-                      <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
-                    <% else %>
-                      <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
-                    <% end %>
-                  <% end %>
-                </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  <%= link_to site_documents_path(@site, sort: 'source', direction: (params[:sort] == 'source' && params[:direction] != 'desc') ? 'desc' : 'asc', filename: params[:filename], category: params[:category], start_date: params[:start_date], end_date: params[:end_date], status: params[:status]), class: "group inline-flex items-center" do %>
-                    Web Page
-                    <% if params[:sort] == 'source' %>
                       <i class="fas fa-<%= params[:direction] == 'desc' ? 'sort-down' : 'sort-up' %> ml-1 text-primary-500"></i>
                     <% else %>
                       <i class="fas fa-sort ml-1 text-gray-400 group-hover:text-gray-500"></i>
@@ -81,30 +71,33 @@
                     </button>
                     <%= render partial: "documents/pdf_modal", locals: { document: document } %>
                   </td>
-                  <td class="px-6 py-4 text-sm text-gray-900" title="<%= document.file_name %>"><%= document.file_name&.truncate(80) %>
-                  </td>
-                  <% source = document_source(document.source) %>
-                  <td class="px-6 py-4 text-sm text-gray-900 w-96">
-                    <%= source[:text] %>
-                    <% if source[:url].present? %>
-                      <a href="<%= source[:url] %>" target="_blank" rel="noopener noreferrer" class="ml-1 text-primary-600 hover:text-primary-900" title="Open source in new tab">
-                        <i class="fas fa-external-link-alt text-sm"></i>
-                      </a>
-                    <% end %>
+                  <td class="px-6 py-4 text-sm w-[40%]" title="<%= document.file_name %>">
+                    <div class="flex flex-col gap-1">
+                      <div class="text-gray-900"><%= document.file_name&.truncate(80) %></div>
+                      <% source = document_source(document.source) %>
+                      <div class="text-gray-400 flex items-center">
+                        <%= source[:text] %>
+                        <% if source[:url].present? %>
+                          <a href="<%= source[:url] %>" target="_blank" rel="noopener noreferrer" class="ml-1 text-primary-600 hover:text-primary-900" title="Open source in new tab">
+                            <i class="fas fa-external-link-alt text-sm"></i>
+                          </a>
+                        <% end %>
+                      </div>
+                    </div>
                   </td>
                   <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-500"><%= document.modification_date&.strftime("%b %d, %Y") %></td>
                   <td class="px-6 py-4 text-sm text-gray-500">
                     <span class="text-xs font-normal">
                       <i class="fas fa-wand-magic-sparkles"></i>
                     </span>
-                    Staff report, ordinance, resolution, agreement
+                    Job Announcement
                     <%#= document.document_category %>
                   </td>
                   <td class="px-6 py-4 text-sm text-gray-500">
                     <span class="text-xs font-normal">
                       <i class="fas fa-wand-magic-sparkles"></i>
                     </span>
-                    Convert to web content
+                    Convert
                     <%#= document.accessibility_recommendation %>
                   </td>
                   <td class="px-6 py-4 text-sm text-gray-500">

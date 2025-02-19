@@ -3,7 +3,11 @@ class DocumentsController < AuthenticatedController
   skip_before_action :verify_authenticity_token, only: [:update_document_category, :update_accessibility_recommendation, :update_status, :update_notes]
   before_action :set_site, except: [:update_document_category, :update_accessibility_recommendation, :update_notes]
   before_action :set_document_for_update, only: [:update_document_category, :update_accessibility_recommendation, :update_notes]
-  before_action :set_document, only: []
+  before_action :set_document, only: [:modal_content]
+
+  def modal_content
+    render partial: "modal_content", locals: {document: @document}
+  end
 
   def index
     @documents = @site.documents

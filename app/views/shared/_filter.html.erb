@@ -22,7 +22,7 @@
           <label class="label">
             <span class="label-text">File Name</span>
           </label>
-          <%= text_field_tag :filename, params[:filename], class: "input input-bordered w-full", placeholder: "Search by filename..." %>
+          <%= text_field_tag :filename, params[:filename], class: "input input-bordered w-full", placeholder: "Search by file or web page..." %>
         </div>
         <div>
           <label class="label">
@@ -35,8 +35,8 @@
       </div>
       <div class="flex justify-end pt-4">
         <div>
-          <%= link_to 'Clear', site_documents_path(site), class: "btn btn-ghost", data: { action: "filter#clearFilters" } %>
-          <%= submit_tag 'Apply Filters', class: "btn btn btn-primary" %>
+          <%= link_to 'Clear', site_documents_path(site), class: "btn btn-sm btn-ghost", data: { action: "filter#clearFilters" } %>
+          <%= submit_tag 'Apply Filters', class: "btn btn-sm btn-primary" %>
         </div>
       </div>
     <% end %>

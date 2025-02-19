@@ -16,20 +16,20 @@
     <div data-modal-target="summaryView">
       <!-- Summary Input Area -->
       <div class="flex space-x-2 items-start mb-4">
-        <textarea class="textarea textarea-bordered flex-1 h-20 mb-2" placeholder="Enter or view document summary..."></textarea>
         <button class="btn btn-primary btn-sm">
           <i class="fas fa-wand-magic-sparkles mr-1"></i>
-          Summarize
+          Summarize Document
         </button>
+        <p></p>
       </div>
       <iframe src="<%= document.url %>#pagemode=none&toolbar=1" class="w-full h-[calc(90vh-8rem)]" type="application/pdf"></iframe>
     </div>
     <!-- PDF Details View -->
-    <div data-modal-target="metadataView" class="hidden h-[calc(90vh-12rem)] overflow-y-auto">
+    <div data-modal-target="metadataView" class="hidden h-[calc(90vh-12rem)] overflow-y-auto bg-white rounded-md">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 mt-4">
         <!-- Document Details -->
         <div>
-          <div class="space-y-4">
+          <div class="space-y-4 px-3">
             <div>
               <div class="text-sm font-medium text-gray-500 mb-1">File Name</div>
               <div class="text-sm text-gray-900 break-words whitespace-normal"><%= document.file_name %></div>
@@ -66,31 +66,33 @@
         </div>
         <!-- Document Metadata -->
         <div>
-          <div class="space-y-4">
+          <div class="space-y-4 px-3">
             <div>
               <div class="text-sm font-medium text-gray-500 mb-1">Author</div>
-              <div class="text-sm text-gray-900"><%= document.author %></div>
+              <div class="text-sm text-gray-900">
+                <%= format_metadata(document.author) %>
+              </div>
             </div>
             <div class="border-t pt-4">
-              <div class="text-sm font-medium text-gray-500 mb-1">Created</div>
+              <div class="text-sm font-medium text-gray-500 mb-1">Created On</div>
               <div class="text-sm text-gray-900"><%= document.creation_date&.strftime("%B %d, %Y") %></div>
             </div>
             <div class="border-t pt-4">
               <div class="text-sm font-medium text-gray-500 mb-1">Keywords</div>
-              <div class="text-sm text-gray-900"><%= document.keywords %></div>
+              <div class="text-sm text-gray-900"><%= format_metadata(document.keywords) %></div>
             </div>
             <div class="border-t pt-4">
               <div class="text-sm font-medium text-gray-500 mb-1">Producer</div>
-              <div class="text-sm text-gray-900"><%= document.producer %></div>
+              <div class="text-sm text-gray-900"><%= format_metadata(document.producer) %></div>
             </div>
             <div class="border-t pt-4">
-              <div class="text-sm font-medium text-gray-500 mb-1">PDF Version</div>
-              <div class="text-sm text-gray-900"><%= document.pdf_version %></div>
+              <div class="text-sm font-medium text-gray-500 mb-1">Version</div>
+              <div class="text-sm text-gray-900"><%= format_metadata(document.pdf_version) %></div>
             </div>
           </div>
         </div>
         <!--  Notes -->
-        <div class="col-span-1 md:col-span-2 px-6" data-controller="modal-notes" data-modal-notes-document-id-value="<%= document.id %>">
+        <div class="col-span-1 md:col-span-2 px-3" data-controller="modal-notes" data-modal-notes-document-id-value="<%= document.id %>">
           <h3 class="text-md font-semibold text-gray-600 mb-2 flex items-center">
             Notes
           </h3>
@@ -111,7 +113,6 @@
     <!-- History View -->
     <div data-modal-target="historyView" class="hidden h-[calc(90vh-12rem)] overflow-y-auto">
       <div class="space-y-4 p-4">
-        <h3 class="font-medium text-gray-900">Document History</h3>
         <div class="space-y-4">
           <% document.versions.each do |version| %>
             <div class="border rounded-lg p-4 bg-white shadow-sm">

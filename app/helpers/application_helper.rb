@@ -16,6 +16,10 @@ module ApplicationHelper
     {text: text, url: url}
   end
 
+  def format_metadata(value)
+    value.presence || "—"
+  end
+
   def short_number(number)
     number_to_human(number, format: "%n%u", units: {thousand: "k", million: "M", billion: "B"})
   end

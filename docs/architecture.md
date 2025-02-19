@@ -2,7 +2,25 @@
 
 ## Overview
 
-This document outlines the architecture of the PDF processing pipeline, including the integrated Python components, AWS services, and other infrastructure elements.
+This document outlines the architecture of the PDF processing pipeline, including the integrated Python components, AWS services, and other infrastructure elements. The system is designed to be scalable, maintainable, and follows modern development practices with comprehensive testing and monitoring.
+
+## Development Tools and Practices
+
+The project employs several tools to maintain code quality and security:
+
+1. **Code Quality**:
+   - **Standardrb**: Enforces Ruby style guidelines and best practices
+   - **Bullet**: Detects N+1 queries in development
+   - **Better Errors**: Provides detailed error pages in development
+
+2. **Security**:
+   - **Brakeman**: Performs security analysis of Ruby code
+   - **Overcommit**: Manages Git hooks for pre-commit checks
+
+3. **Testing**:
+   - **RSpec**: Primary testing framework
+   - **FactoryBot**: Test data generation
+   - **Integration Tests**: End-to-end testing of key workflows
 
 ## System Architecture
 
@@ -17,11 +35,31 @@ This document outlines the architecture of the PDF processing pipeline, includin
    - Uses Elasticache (Redis) for background job queuing
 
 2. **Python Components** (Located in python_components/):
-   - **Site Crawler**: Crawls government websites to identify PDF files
-   - **Metadata Downloader**: Downloads PDF files and extracts metadata
-   - **Document Classifier**: Uses an LLM to determine the document "type"
-   - **Policy Reviewer**: Reviews document content against WCAG 2.1 Accessibility Policy
-   - **Document Transformer**: Extracts and transforms PDF content into MD or HTML
+   - **Site Crawler**:
+     - Crawls government websites to identify PDF files
+     - Uses BeautifulSoup4 for HTML parsing
+     - Respects robots.txt and rate limiting
+   - **Metadata Downloader**:
+     - Downloads PDF files and extracts metadata
+     - Uses PyPDF2 for metadata extraction
+     - Handles various PDF versions and encodings
+   - **Document Classifier**:
+     - Uses an LLM to determine the document "type"
+     - Employs OpenAI's GPT models for classification
+     - Maintains classification history
+   - **Policy Reviewer**:
+     - Reviews document content against WCAG 2.1 Accessibility Policy
+     - Checks PDF/UA compliance
+     - Generates detailed accessibility reports
+   - **Document Transformer**:
+     - Extracts and transforms PDF content into MD or HTML
+     - Preserves document structure and formatting
+     - Handles complex layouts and tables
+
+   Requirements:
+   - Python 3.10+
+   - Dependencies listed in requirements.txt
+   - OpenAI API key for LLM functionality
 
 3. **AWS Infrastructure**:
    - **S3**: Stores versioned PDF files and other assets
@@ -88,7 +126,15 @@ LocalStack provides S3 versioning support in development:
 
 4. **Background Processing**:
    - **Sidekiq**: Manages background jobs in the Rails application
-   - **Redis**: Provides job queuing and caching capabilities
+     - Configured queues (in priority order):
+       1. critical: Time-sensitive operations
+       2. default: Standard processing tasks
+       3. low: Batch operations and maintenance
+       4. mailers: Email notifications
+   - **Redis**:
+     - Provides job queuing and caching capabilities
+     - Configured for persistence in production
+     - Supports job retry and error handling
 
 ## Project Structure
 

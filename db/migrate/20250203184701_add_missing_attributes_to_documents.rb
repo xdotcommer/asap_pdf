@@ -8,5 +8,6 @@ class AddMissingAttributesToDocuments < ActiveRecord::Migration[6.1]
     add_column :documents, :accessibility_confidence, :float
     add_column :documents, :approved_accessibility_action, :string
     add_column :documents, :changed_accessibility_action, :string
+    add_column :documents, :notes, :text
   end
 end

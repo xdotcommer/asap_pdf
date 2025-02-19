@@ -6,8 +6,9 @@ A Rails application for monitoring websites and automating the remediation of an
 
 Before you begin, ensure you have the following installed:
 
-* Ruby 3.3.4 (we recommend using a version manager like `rbenv` or `rvm`)
-* Node.js 23.4.0 (we recommend using `nvm` for version management)
+* Ruby 3.2.2 (we recommend using a version manager like `rbenv` or `rvm`)
+* Node.js 18.17.0 (we recommend using `nvm` for version management)
+* Python 3.10+ (for PDF processing components)
 * Yarn (latest version)
 * Redis (for Sidekiq background jobs)
 * SQLite3 (default database)
@@ -54,13 +55,30 @@ The application will be available at http://localhost:3000
 ## Architecture Overview
 
 - **Frontend**: Built with Hotwired (Turbo + Stimulus) and Tailwind CSS
-- **Backend**: Ruby on Rails 8.0
+- **Backend**: Ruby on Rails 7.0
 - **Background Jobs**: Sidekiq with Redis
 - **Testing**: RSpec
 
+## Python Components
+
+The application includes several Python components for PDF processing:
+
+- Site Crawler: Discovers PDF files on government websites
+- Metadata Downloader: Downloads and extracts PDF metadata
+- Document Classifier: Determines document types using LLM
+- Policy Reviewer: Checks WCAG 2.1 compliance
+- Document Transformer: Converts PDFs to MD/HTML
+
+To set up the Python components:
+
+```bash
+cd python_components
+pip install -r requirements.txt
+```
+
 ## Background Jobs
 
-Background jobs are processed using Sidekiq. The Redis server must be running for Sidekiq to work. Jobs are configured in the following queues (in order of priority):
+Background jobs are processed using Sidekiq. The Redis server must be running for Sidekiq to work. Jobs are defined in `config/sidekiq.yml` and configured in the following queues (in order of priority):
 - critical
 - default
 - low

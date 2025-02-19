@@ -55,6 +55,24 @@ export default class extends Controller {
         if (response.ok) {
           this.displayTarget.textContent = value || "No notes"
           this.hideTextarea()
+
+          // Add success animations
+          this.displayTarget.classList.add('success-animation')
+
+          // Create and add success icon
+          const successIcon = document.createElement('i')
+          successIcon.className = 'fas fa-check text-success text-xs ml-1 success-icon'
+          this.displayTarget.appendChild(successIcon)
+
+          // Remove scale animation after it completes
+          setTimeout(() => {
+            this.displayTarget.classList.remove('success-animation')
+          }, 500)
+
+          // Remove success icon after fade animation
+          setTimeout(() => {
+            successIcon.remove()
+          }, 800)
         } else {
           throw new Error("Failed to update")
         }

@@ -48,14 +48,32 @@ export default class extends Controller {
       return
     }
 
+    // Map field values to their corresponding route names
+    const routeMap = {
+      document_category: 'update_document_category',
+      accessibility_recommendation: 'update_accessibility_recommendation',
+      notes: 'update_notes'
+    }
+
+    const route = routeMap[this.fieldValue]
+    if (!route) {
+      console.error(`Unknown field: ${this.fieldValue}`)
+      return
+    }
+
+    // Format the request body based on the field type
+    const requestBody = this.fieldValue === 'notes'
+      ? JSON.stringify({ document: { notes: value } })
+      : JSON.stringify({ value: value })
+
     try {
-      const response = await fetch(`/documents/${this.documentIdValue}/update_${this.fieldValue}`, {
+      const response = await fetch(`/documents/${this.documentIdValue}/${route}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': csrfToken
         },
-        body: JSON.stringify({ value: value })
+        body: requestBody
       })
 
       if (response.ok) {

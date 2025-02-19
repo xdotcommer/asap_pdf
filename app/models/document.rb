@@ -2,6 +2,8 @@ class Document < ApplicationRecord
   belongs_to :site
   has_many :workflow_histories, class_name: "DocumentWorkflowHistory"
 
+  has_paper_trail versions: {scope: -> { order(created_at: :desc) }}
+
   scope :by_status, ->(status) {
     case status
     when "in_review"
@@ -105,31 +107,5 @@ class Document < ApplicationRecord
     self.classification_status = "classification_pending" unless classification_status
     self.policy_review_status = "policy_pending" unless policy_review_status
     self.recommendation_status = "recommendation_pending" unless recommendation_status
-  end
-
-  def create_workflow_history(transition)
-    metadata = case transition.event
-    when :complete_classification
-      transition.args.first&.slice(:category, :confidence) || {}
-    when :change_classification
-      transition.args.first&.slice(:new_category) || {}
-    when :complete_policy_review
-      transition.args.first&.slice(:action, :confidence) || {}
-    when :change_policy
-      transition.args.first&.slice(:new_action) || {}
-    else
-      {}
-    end
-
-    history = workflow_histories.create(
-      status_type: transition.machine.name.to_s,
-      from_status: transition.from,
-      to_status: transition.to,
-      action_type: transition.event.to_s,
-      metadata: metadata,
-      user: site.user,
-      created_at: Time.current
-    )
-    raise "Failed to create workflow history: #{history.errors.full_messages.join(", ")}" unless history.persisted?
   end
 end

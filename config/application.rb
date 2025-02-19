@@ -22,6 +22,7 @@ module AsapPdf
     config.paths.add "app/api", glob: "**/*.rb"
     config.autoload_paths += Dir["#{Rails.root}/app/api/*"]
     config.view_component.preview_paths << "#{Rails.root}/spec/components/previews" if Rails.env.development?
+    config.active_record.yaml_column_permitted_classes = [Symbol, Date, Time, ActiveSupport::TimeWithZone, ActiveSupport::TimeZone]
 
     config.generators.system_tests = nil
   end

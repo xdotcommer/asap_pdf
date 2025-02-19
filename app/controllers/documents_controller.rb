@@ -20,7 +20,7 @@ class DocumentsController < AuthenticatedController
 
   def update_document_category
     value = params[:value].presence || "Unknown"
-    if @document.update_column(:document_category, value)
+    if @document.update(document_category: value)
       render json: {
         display_text: value
       }
@@ -31,7 +31,7 @@ class DocumentsController < AuthenticatedController
 
   def update_accessibility_recommendation
     value = params[:value].presence || "Unknown"
-    if @document.update_column(:accessibility_recommendation, value)
+    if @document.update(accessibility_recommendation: value)
       render json: {
         display_text: value
       }

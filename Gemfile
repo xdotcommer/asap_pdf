@@ -59,3 +59,5 @@ gem "aws-sdk-s3", "~> 1.180"  # For S3 versioning support
 # API and Documentation
 gem "grape", "~> 2.3"
 gem "grape-swagger"
+
+gem "paper_trail", "~> 16.0"

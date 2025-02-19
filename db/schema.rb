@@ -10,24 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_18_225528) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_19_154113) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
-
-  create_table "document_workflow_histories", force: :cascade do |t|
-    t.bigint "document_id", null: false
-    t.bigint "user_id"
-    t.string "status_type"
-    t.string "from_status"
-    t.string "to_status"
-    t.string "action_type"
-    t.jsonb "metadata"
-    t.text "notes"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["document_id"], name: "index_document_workflow_histories_on_document_id"
-    t.index ["user_id"], name: "index_document_workflow_histories_on_user_id"
-  end
 
   create_table "documents", force: :cascade do |t|
     t.text "file_name"
@@ -95,8 +80,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_18_225528) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
-  add_foreign_key "document_workflow_histories", "documents"
-  add_foreign_key "document_workflow_histories", "users"
+  create_table "versions", force: :cascade do |t|
+    t.string "whodunnit"
+    t.datetime "created_at"
+    t.bigint "item_id", null: false
+    t.string "item_type", null: false
+    t.string "event", null: false
+    t.text "object"
+    t.text "object_changes"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+  end
+
   add_foreign_key "documents", "sites"
   add_foreign_key "sessions", "users"
   add_foreign_key "sites", "users"

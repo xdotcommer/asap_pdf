@@ -124,7 +124,7 @@ GEM
       reline (>= 0.3.8)
     diff-lcs (1.5.1)
     docile (1.4.1)
-    dockerfile-rails (1.7.5)
+    dockerfile-rails (1.7.6)
       rails (>= 3.0.0)
     dotenv (3.1.7)
     dotenv-rails (3.1.7)
@@ -226,7 +226,7 @@ GEM
       ruby2_keywords (~> 0.0.1)
     mustermann-grape (1.1.0)
       mustermann (>= 1.0.0)
-    net-imap (0.5.5)
+    net-imap (0.5.6)
       date
       net-protocol
     net-pop (0.1.2)
@@ -237,7 +237,7 @@ GEM
       net-ssh (>= 2.6.5, < 8.0.0)
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
-    net-smtp (0.5.0)
+    net-smtp (0.5.1)
       net-protocol
     net-ssh (7.3.0)
     nio4r (2.7.4)

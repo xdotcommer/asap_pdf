@@ -30,28 +30,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_18_225528) do
   end
 
   create_table "documents", force: :cascade do |t|
-    t.string "file_name"
-    t.string "url"
+    t.text "file_name"
+    t.text "url"
     t.integer "file_size"
-    t.string "source"
+    t.text "source"
     t.string "document_status", default: "discovered"
     t.string "classification_status", default: "classification_pending"
     t.string "policy_review_status", default: "policy_pending"
     t.string "recommendation_status", default: "recommendation_pending"
     t.string "status"
-    t.string "document_category"
+    t.string "document_category", default: "Unknown"
     t.float "document_category_confidence"
-    t.text "accessibility_recommendation"
+    t.text "accessibility_recommendation", default: "Unknown"
     t.text "accessibility_action"
     t.datetime "action_taken_on"
-    t.string "title"
-    t.string "author"
-    t.string "subject"
-    t.string "keywords"
+    t.text "title"
+    t.text "author"
+    t.text "subject"
+    t.text "keywords"
     t.datetime "creation_date"
     t.datetime "modification_date"
-    t.string "producer"
-    t.string "pdf_version"
+    t.text "producer"
+    t.text "pdf_version"
     t.integer "number_of_pages"
     t.bigint "site_id", null: false
     t.datetime "created_at", null: false
@@ -84,8 +84,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_18_225528) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.jsonb "source_tree_cache"
-    t.datetime "source_tree_updated_at"
     t.index ["user_id"], name: "index_sites_on_user_id"
   end
 

@@ -10,9 +10,9 @@ class CreateDocuments < ActiveRecord::Migration[8.0]
       t.string :policy_review_status, default: "policy_pending"
       t.string :recommendation_status, default: "recommendation_pending"
       t.string :status
-      t.string :document_category
+      t.string :document_category, default: "Unknown"
       t.float :document_category_confidence
-      t.text :accessibility_recommendation
+      t.text :accessibility_recommendation, default: "Unknown"
       t.text :accessibility_action
       t.datetime :action_taken_on
       t.text :title

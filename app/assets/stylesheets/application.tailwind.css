@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes fade-out-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.fade-out-up {
+  animation: fade-out-up 300ms ease-out forwards;
+}
+
 @keyframes success-scale {
   0% {
     transform: scale(1);

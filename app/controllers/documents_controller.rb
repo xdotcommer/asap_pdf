@@ -19,9 +19,10 @@ class DocumentsController < AuthenticatedController
   end
 
   def update_document_category
-    if @document.update_column(:document_category, params[:value])
+    value = params[:value].presence || "Unknown"
+    if @document.update_column(:document_category, value)
       render json: {
-        display_text: params[:value].present? ? params[:value] : "uncategorized"
+        display_text: value
       }
     else
       render json: {error: @document.errors.full_messages}, status: :unprocessable_entity
@@ -29,9 +30,10 @@ class DocumentsController < AuthenticatedController
   end
 
   def update_accessibility_recommendation
-    if @document.update_column(:accessibility_recommendation, params[:value])
+    value = params[:value].presence || "Unknown"
+    if @document.update_column(:accessibility_recommendation, value)
       render json: {
-        display_text: params[:value].present? ? params[:value] : "undetermined"
+        display_text: value
       }
     else
       render json: {error: @document.errors.full_messages}, status: :unprocessable_entity
@@ -53,10 +55,18 @@ class DocumentsController < AuthenticatedController
       .where(sites: {user_id: Current.user.id})
       .find(params[:id])
 
-    if @document.update(status: params[:status])
-      head :ok
+    # Set Unknown as default for empty values
+    existing_recommendation = @document.accessibility_recommendation || "Unknown"
+    existing_category = @document.document_category || "Unknown"
+
+    if @document.update(
+      status: params[:status],
+      accessibility_recommendation: existing_recommendation,
+      document_category: existing_category
+    )
+      render json: {success: true}
     else
-      render json: {error: @document.errors.full_messages}, status: :unprocessable_entity
+      render json: {success: false, error: @document.errors.full_messages}, status: :unprocessable_entity
     end
   end
 

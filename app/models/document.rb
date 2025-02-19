@@ -33,12 +33,12 @@ class Document < ApplicationRecord
   }
 
   CONTENT_TYPES = [
-    "Agreement", "Agenda", "Brochure", "Diagram", "Flyer", "Form", "Form Instruction",
+    "Unknown", "Agreement", "Agenda", "Brochure", "Diagram", "Flyer", "Form", "Form Instruction",
     "Job Announcement", "Job Description", "Letter", "Map", "Memo", "Policy", "Slides",
     "Press", "Procurement", "Notice", "Report", "Spreadsheet"
   ].freeze
 
-  DECISION_TYPES = ["Leave", "Convert", "Remove", "Remediate"].freeze
+  DECISION_TYPES = ["Unknown", "Leave", "Convert", "Remove", "Remediate"].freeze
 
   validates :file_name, presence: true
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp}

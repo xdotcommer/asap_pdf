@@ -93,10 +93,10 @@
                   <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500"><%= document.modification_date&.strftime("%b %d, %Y") %></td>
                   <td class="px-3 py-4 text-sm text-gray-500 w-32" data-controller="dropdown-edit" data-dropdown-edit-document-id-value="<%= document.id %>" data-dropdown-edit-field-value="document_category">
                     <div data-action="click->dropdown-edit#showSelect" data-dropdown-edit-target="display" class="cursor-pointer hover:underline">
-                      <%= document.document_category.present? ? document.document_category : "uncategorized" %>
+                      <%= document.document_category.present? ? document.document_category : "Unknown" %>
                     </div>
                     <select data-dropdown-edit-target="select" data-action="change->dropdown-edit#updateValue blur->dropdown-edit#hideSelect" class="hidden w-[125%] bg-white border border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 p-2">
-                      <option value="">uncategorized</option>
+                      <option value="Unknown">Unknown</option>
                       <% Document::CONTENT_TYPES.each do |key| %>
                         <option value="<%= key %>" <%= document.document_category == key ? 'selected' : '' %>><%= key %></option>
                         <% end %>
@@ -104,10 +104,10 @@
                     </td>
                     <td class="px-3 py-4 text-sm text-gray-500 w-32" data-controller="dropdown-edit" data-dropdown-edit-document-id-value="<%= document.id %>" data-dropdown-edit-field-value="accessibility_recommendation">
                       <div data-action="click->dropdown-edit#showSelect" data-dropdown-edit-target="display" class="cursor-pointer hover:underline">
-                        <%= document.accessibility_recommendation.present? ? document.accessibility_recommendation : "undetermined" %>
+                        <%= document.accessibility_recommendation.present? ? document.accessibility_recommendation : "Unknown" %>
                       </div>
                       <select data-dropdown-edit-target="select" data-action="change->dropdown-edit#updateValue blur->dropdown-edit#hideSelect" class="hidden w-[125%] bg-white border border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 p-2">
-                        <option value="">undetermined</option>
+                        <option value="Unknown">Unknown</option>
                         <% Document::DECISION_TYPES.each do |key| %>
                           <option value="<%= key %>" <%= document.accessibility_recommendation == key ? 'selected' : '' %>><%= key %></option>
                           <% end %>

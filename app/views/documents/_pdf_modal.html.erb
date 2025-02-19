@@ -2,12 +2,15 @@
   <div class="modal-box w-11/12 max-w-[900px] h-[90vh]">
     <div class="flex flex-col space-y-4">
       <!-- Title and URL Section -->
-      <div class="flex items-start justify-between border-b pb-1">
-        <div class="flex flex-col items-start">
-          <h2 class="text-md font-semibold text-left">Title: <%= document.file_name %></h2>
-          <div class="text-sm text-gray-600 flex items-center">
+      <div class="flex items-start gap-4 border-b pb-1">
+        <div class="flex-1 min-w-0 text-center">
+          <h2 class="text-sm font-semibold break-words whitespace-normal"><%= document.file_name %></h2>
+          <div class="text-sm text-gray-600">
             <% source = document_source(document.source) %>
-            <span class="text-left">Web Page: <%= source[:text] %></span>
+            <span class="break-words whitespace-normal">
+              <%= document.site.website %> ▸
+              <%= source[:text] %>
+            </span>
             <% if source[:url].present? %>
               <a href="<%= source[:url] %>" target="_blank" rel="noopener noreferrer" class="ml-1 text-primary-600 hover:text-primary-900" title="Open source in new tab">
                 <i class="fas fa-external-link-alt"></i>
@@ -43,13 +46,13 @@
       </div>
       <!-- PDF Details View -->
       <div data-modal-target="metadataView" class="hidden h-[calc(90vh-12rem)] overflow-y-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 mt-4">
           <!-- Document Details -->
           <div>
             <div class="space-y-4">
               <div>
                 <div class="text-sm font-medium text-gray-500 mb-1">File Name</div>
-                <div class="text-sm text-gray-900"><%= document.file_name %></div>
+                <div class="text-sm text-gray-900 break-words whitespace-normal"><%= document.file_name %></div>
               </div>
               <div class="border-t pt-4">
                 <div class="text-sm font-medium text-gray-500 mb-1">Last Modified</div>
@@ -58,7 +61,7 @@
               <div class="border-t pt-4">
                 <div class="text-sm font-medium text-gray-500 mb-1">Type</div>
                 <div class="text-sm">
-                  <span class="bg-primary-100 text-primary-800 px-2 py-1 rounded-full">
+                  <span class="bg-primary-100 text-sm text-gray-900 px-2 py-1 rounded-full">
                     <%= document.document_category.present? ? document.document_category : "uncategorized" %>
                   </span>
                 </div>
@@ -66,7 +69,7 @@
               <div class="border-t pt-4">
                 <div class="text-sm font-medium text-gray-500 mb-1">Decision</div>
                 <div class="text-sm">
-                  <span class="bg-primary-100 text-primary-800 px-2 py-1 rounded-full">
+                  <span class="bg-primary-100 text-sm text-gray-900 px-2 py-1 rounded-full">
                     <%= document.accessibility_recommendation.present? ? document.accessibility_recommendation : "undetermined" %>
                   </span>
                 </div>
@@ -74,7 +77,7 @@
               <div class="border-t pt-4">
                 <div class="text-sm font-medium text-gray-500 mb-1">Pages</div>
                 <div class="text-sm">
-                  <span class="bg-primary-100 text-primary-800 px-2 py-1 rounded-full">
+                  <span class="bg-primary-100 text-sm text-gray-900 px-2 py-1 rounded-full">
                     <%= document.number_of_pages %>
                   </span>
                 </div>
@@ -89,12 +92,12 @@
                 <div class="text-sm text-gray-900"><%= document.author %></div>
               </div>
               <div class="border-t pt-4">
-                <div class="text-sm font-medium text-gray-500 mb-1">Keywords</div>
-                <div class="text-sm text-gray-900"><%= document.keywords %></div>
-              </div>
-              <div class="border-t pt-4">
                 <div class="text-sm font-medium text-gray-500 mb-1">Created</div>
                 <div class="text-sm text-gray-900"><%= document.creation_date&.strftime("%B %d, %Y") %></div>
+              </div>
+              <div class="border-t pt-4">
+                <div class="text-sm font-medium text-gray-500 mb-1">Keywords</div>
+                <div class="text-sm text-gray-900"><%= document.keywords %></div>
               </div>
               <div class="border-t pt-4">
                 <div class="text-sm font-medium text-gray-500 mb-1">Producer</div>
@@ -107,15 +110,19 @@
             </div>
           </div>
           <!--  Notes -->
-          <div class="col-span-1 md:col-span-2">
-            <h3 class="text-md font-semibold text-gray-600 mb-4 flex items-center">
+          <div class="col-span-1 md:col-span-2 px-6" data-controller="modal-notes" data-modal-notes-document-id-value="<%= document.id %>">
+            <h3 class="text-md font-semibold text-gray-600 mb-2 flex items-center">
               Notes
             </h3>
-            <textarea class="w-full h-32 p-2 text-sm border rounded-lg" placeholder="Add your notes here..."><%= document.notes %></textarea>
+            <textarea
+              data-modal-notes-target="textarea"
+              class="w-full h-16 p-2 text-sm border rounded-lg focus:border-primary-500 focus:ring-primary-500"
+              placeholder="Add your notes here..."
+            ><%= document.notes %></textarea>
             <div class="mt-2 flex justify-end">
-              <button class="btn btn-primary btn-sm">
+              <button class="btn btn-primary btn-sm" data-action="modal-notes#updateNotes">
                 <i class="fas fa-save mr-1"></i>
-                Save Notes
+                Update Notes
               </button>
             </div>
           </div>

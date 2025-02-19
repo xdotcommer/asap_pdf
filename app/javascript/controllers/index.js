@@ -12,6 +12,7 @@ import FilterController from "./filter_controller"
 import StatusController from "./status_controller"
 import DropdownEditController from "./dropdown_edit_controller"
 import TextEditController from "./text_edit_controller"
+import ModalNotesController from "./modal_notes_controller"
 
 application.register("hello", HelloController)
 application.register("toast", ToastController)
@@ -21,3 +22,4 @@ application.register("filter", FilterController)
 application.register("status", StatusController)
 application.register("dropdown-edit", DropdownEditController)
 application.register("text-edit", TextEditController)
+application.register("modal-notes", ModalNotesController)

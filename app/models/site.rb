@@ -9,6 +9,11 @@ class Site < ApplicationRecord
   validates :name, uniqueness: {scope: [:location, :user_id]}
   validate :ensure_safe_url
 
+  def website
+    return nil if primary_url.blank?
+    primary_url.sub(/^https?:\/\//, "").sub(/\/$/, "")
+  end
+
   def s3_endpoint_prefix
     return nil if primary_url.blank?
 

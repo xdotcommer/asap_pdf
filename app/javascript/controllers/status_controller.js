@@ -85,43 +85,44 @@ export default class extends Controller {
   }
 
   showToast(message, type = 'success') {
-    const colors = type === 'success'
-      ? 'bg-green-100 border-green-400 text-green-700'
-      : 'bg-red-100 border-red-400 text-red-700'
-    const icon = type === 'success'
-      ? 'fa-check-circle'
-      : 'fa-exclamation-circle'
+    const toast = document.createElement('div')
+    toast.className = 'fixed top-4 right-4 z-50 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded'
+    toast.innerHTML = `<div class="flex items-center"><i class="fas fa-check-circle mr-2"></i>${message}</div>`
+    document.body.appendChild(toast)
 
-    const toastHtml = `
-      <div data-controller="toast">
-        <div data-toast-target="container" class="fixed top-4 right-4 z-50 ${colors} px-4 py-3 rounded border">
-          <div class="flex items-center">
-            <div class="py-1"><i class="fas ${icon} mr-2"></i>${message}</div>
-          </div>
-        </div>
-      </div>
-    `
-    document.body.insertAdjacentHTML('beforeend', toastHtml)
-    const toastElement = document.body.lastElementChild
-    const toastController = application.getControllerForElementAndIdentifier(toastElement, 'toast')
-    toastController.show()
+    // Remove after 3 seconds
+    setTimeout(() => {
+      toast.style.transition = 'opacity 0.5s'
+      toast.style.opacity = '0'
+      setTimeout(() => toast.remove(), 500)
+    }, 3000)
   }
 
   updateStatusCount(newStatus) {
     const oldStatus = document.querySelector('input[name="status"]')?.value || ''
 
+    // Helper function to get the correct selector for a status
+    const getStatusSelector = (status) => {
+      if (status === '') return 'a[href$="status="]'
+      return `a[href*="status=${status}"]`
+    }
+
     // Decrement old status count
-    const oldStatusElement = document.querySelector(`a[href*="status=${oldStatus}"] span`)
+    const oldStatusElement = document.querySelector(`${getStatusSelector(oldStatus)} span`)
     if (oldStatusElement) {
       const oldCount = parseInt(oldStatusElement.textContent)
-      oldStatusElement.textContent = oldCount - 1
+      if (!isNaN(oldCount)) {
+        oldStatusElement.textContent = oldCount - 1
+      }
     }
 
     // Increment new status count
-    const newStatusElement = document.querySelector(`a[href*="status=${newStatus}"] span`)
+    const newStatusElement = document.querySelector(`${getStatusSelector(newStatus)} span`)
     if (newStatusElement) {
       const newCount = parseInt(newStatusElement.textContent)
-      newStatusElement.textContent = newCount + 1
+      if (!isNaN(newCount)) {
+        newStatusElement.textContent = newCount + 1
+      }
     }
   }
 }

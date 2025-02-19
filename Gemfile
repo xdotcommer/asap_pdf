@@ -54,7 +54,7 @@ end
 
 gem "bcrypt", "~> 3.1"
 gem "state_machines", "~> 0.6.0"
-gem "aws-sdk-s3", "~> 1.180"  # For S3 versioning support
+gem "aws-sdk-s3", "~> 1.182"  # For S3 versioning support
 
 # API and Documentation
 gem "grape", "~> 2.3"

@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
+
 
 @keyframes fade-out-up {
   0% {
@@ -54,7 +54,7 @@
 
 @layer base {
   h1 {
-    @apply text-2xl font-medium text-gray-500 leading-tight text-base-content;
+    @apply text-2xl font-medium text-gray-500 leading-tight text-base;
   }
 }
 
@@ -66,7 +66,7 @@
   .table-zebra tbody tr:nth-child(even) {
     --tw-bg-opacity: 0.5;
     background-color: var(--fallback-b2, oklch(var(--b2) / var(--tw-bg-opacity)));
-    @apply text-2xl font-medium text-gray-500 leading-tight text-base-content;
+    @apply text-2xl font-medium text-gray-500 leading-tight text-base;
   }
 
   .label-text {
@@ -79,7 +79,7 @@
 
   /* Custom select size between DaisyUI's sm and md */
   .select-custom {
-    @apply select select-bordered select-sm;
+    @apply select select-sm;
     @apply m-0 p-2 text-sm h-10;
   }
 }

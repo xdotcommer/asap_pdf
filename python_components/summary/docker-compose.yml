@@ -1,0 +1,22 @@
+services:
+  ollama:
+    container_name: ollama
+    image: ollama/ollama
+    ports:
+      - 7869:11434
+    volumes:
+      - ./data:/data
+  asap-summary:
+    container_name: asap_summary
+    build: .
+    command: tail -f /dev/null
+    volumes:
+      - ./:/workspace
+#  asap-file-server:
+#    image: python:3.9
+#    command: ["python", "-m", "http.server", "8000"]
+#    working_dir: /data
+#    volumes:
+#      - ./data:/data
+#    ports:
+#      - 8000:8000

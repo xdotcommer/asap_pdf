@@ -17,7 +17,8 @@ models = [
     'command-r-plus',
     'command-r',
     'gemini-1.5-pro-latest',
-    'anthropic/claude-3-opus-latest'
+    'anthropic/claude-3-opus-latest',
+    'anthropic/claude-3-5-haiku-latest',
 ]
 
 """

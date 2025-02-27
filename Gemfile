@@ -7,7 +7,7 @@ gem "puma", ">= 5.0"
 gem "jsbundling-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
-gem "cssbundling-rails"
+gem "cssbundling-rails", "~> 1.4.2"
 gem "csv"
 gem "rest-client"
 
@@ -18,9 +18,9 @@ gem "solid_queue"
 gem "solid_cable"
 
 gem "bootsnap", require: false
-gem "kamal", "~> 2.5", require: false
+gem "kamal", "~> 2.5.3", require: false
 gem "thruster", require: false
-gem "redis"
+gem "redis", "~> 5.4.0"
 gem "sidekiq", "~> 7.3"
 
 gem "view_component", "~> 3.21"
@@ -38,7 +38,7 @@ group :development do
   gem "better_errors", "~> 2.10"
   gem "ruby-lsp", "~> 0.23"
   gem "web-console"
-  gem "dockerfile-rails", ">= 1.7"
+  gem "dockerfile-rails", ">= 1.7.9"
   gem "bundler-audit", "~> 0.9.2"
 end
 

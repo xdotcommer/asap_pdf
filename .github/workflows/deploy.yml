@@ -30,6 +30,17 @@ jobs:
         echo "GitHub repository: ${{ github.repository }}"
         echo "GitHub ref: ${{ github.ref }}"
         echo "GitHub SHA: ${{ github.sha }}"
+        echo "Actor: ${{ github.actor }}"
+        echo "Event name: ${{ github.event_name }}"
+        echo "Workflow ref: ${{ github.workflow_ref }}"
+        echo "Environment: ${{ github.environment }}"
+        echo "Job: ${{ github.job }}"
+
+    - name: Debug AWS role
+      run: |
+        echo "Attempting to assume role with:"
+        echo "Repository: repo:${{ github.repository }}:*"
+        echo "Repository ref: repo:${{ github.repository }}:ref:${{ github.ref }}"
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4

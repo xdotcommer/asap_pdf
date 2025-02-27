@@ -92,6 +92,28 @@ class Document < ApplicationRecord
     }
   end
 
+  def infer_summary
+    if summary.nil?
+      endpoint_url = "http://localhost:9000/2015-03-31/functions/function/invocations"
+      payload = {
+        model_name: "gemini-1.5-pro-latest",
+        document_url: url,
+        page_limit: 7
+      }.to_json
+      begin
+        response = RestClient.post(endpoint_url, payload, {content_type: :json, accept: :json})
+        self.summary = response.body
+      rescue RestClient::ExceptionWithResponse => e
+        puts "Error: #{e.response.code} #{e.response.body}"
+      rescue RestClient::Exception => e
+        puts "A RestClient exception occurred: #{e.message}"
+      rescue JSON::ParserError => e
+        puts "The server returned a malformed JSON response: #{e.message}"
+      end
+    end
+    self.summary
+  end
+
   private
 
   def storage_config

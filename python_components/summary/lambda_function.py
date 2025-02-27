@@ -54,7 +54,7 @@ def pdf_to_attachments(pdf_path: str, output_path: str, page_limit: int) -> list
     images = pdf2image.convert_from_path(pdf_path, fmt='jpg')
     attachments = []
     for page, image in enumerate(images):
-        if 0 < page_limit < page:
+        if 0 < page_limit - 1 < page:
             break
         page_path = f'{output_path}/page-{page}.jpg'
         image.save(page_path)

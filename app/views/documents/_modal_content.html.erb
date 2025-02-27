@@ -15,7 +15,7 @@
     <!-- Summary View (Previously PDF View) -->
     <div data-modal-target="summaryView">
       <!-- Summary Input Area -->
-      <div data-controller="summarize" data-summarize-document-id-value="<%= document.id %>" class="flex space-x-2 items-start mb-4">
+      <div data-controller="summarize" data-summarize-document-id-value="<%= document.id %>" class="flex space-x-2 items-start mb-4 text-wrap">
         <p data-summarize-target="display"><%= document.summary %></p>
         <% if document.summary.nil? %>
           <button data-action="click->summarize#getSummary" data-summarize-target="button" class="btn btn-primary btn-sm">

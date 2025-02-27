@@ -101,6 +101,13 @@ resource "aws_iam_role_policy" "github_actions" {
           "ecs:DescribeTaskDefinition"
         ]
         Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = "iam:PassRole"
+        Resource = [
+          "arn:aws:iam::225989367355:role/asap-pdf-production-task-execution-role"
+        ]
       }
     ]
   })

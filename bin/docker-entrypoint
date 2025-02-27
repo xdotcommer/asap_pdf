@@ -15,11 +15,22 @@ echo "Memory Limit: $(cat /sys/fs/cgroup/memory.max 2>/dev/null || echo 'unknown
 echo "CPU Shares: $(cat /sys/fs/cgroup/cpu.max 2>/dev/null || echo 'unknown')"
 echo "=========================="
 
-# If running the rails server then create or migrate existing database
+# Make the wait-for-dependencies script executable
+chmod +x /rails/bin/wait-for-dependencies
+
+# If running the rails server then check dependencies and prepare database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+  echo "Checking dependencies..."
+  /rails/bin/wait-for-dependencies
+
   echo "Running database migrations..."
   ./bin/rails db:prepare
   echo "Database migrations complete"
+
+  # Ensure Solid Queue tables are ready
+  echo "Preparing job queue..."
+  ./bin/rails solid_queue:create
+  echo "Job queue ready"
 fi
 
 echo "Starting command: ${@}"

@@ -185,6 +185,18 @@ resource "aws_ecs_task_definition" "app" {
         {
           name  = "MALLOC_ARENA_MAX"
           value = "2"
+        },
+        {
+          name  = "RAILS_MAX_THREADS"
+          value = "5"
+        },
+        {
+          name  = "RAILS_LOG_TO_STDOUT"
+          value = "true"
+        },
+        {
+          name  = "RAILS_LOG_LEVEL"
+          value = "debug"
         }
       ]
 
@@ -200,12 +212,21 @@ resource "aws_ecs_task_definition" "app" {
       ]
 
       healthCheck = {
-        command     = ["CMD-SHELL", "/rails/bin/healthcheck"]
-        interval    = 60
-        timeout     = 30
-        retries     = 5
-        startPeriod = 180
+        command     = ["CMD-SHELL", "curl -f http://localhost:80/up || exit 1"]
+        interval    = 30
+        timeout     = 5
+        retries     = 3
+        startPeriod = 60
       }
+
+      dependsOn = [
+        {
+          containerName = "app"
+          condition     = "HEALTHY"
+        }
+      ]
+
+      stopTimeout = 120
 
       memoryReservation = var.container_memory
 

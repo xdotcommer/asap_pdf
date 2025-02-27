@@ -1,0 +1,49 @@
+#!/bin/bash -e
+
+MAX_RETRIES=30
+RETRY_INTERVAL=2
+
+echo "=== Checking Dependencies ==="
+
+# Function to test database connection
+check_database() {
+  echo "Checking database connection..."
+  bundle exec rails runner 'begin; ActiveRecord::Base.connection.execute("SELECT 1"); puts "Database connection successful"; rescue => e; puts "Database connection failed: #{e}"; exit 1; end'
+  return $?
+}
+
+# Function to test Redis connection
+check_redis() {
+  echo "Checking Redis connection..."
+  bundle exec rails runner 'begin; Redis.new.ping; puts "Redis connection successful"; rescue => e; puts "Redis connection failed: #{e}"; exit 1; end'
+  return $?
+}
+
+# Wait for database
+retries=0
+until check_database || [ $retries -eq $MAX_RETRIES ]; do
+  echo "Waiting for database... (Attempt $((retries + 1))/$MAX_RETRIES)"
+  sleep $RETRY_INTERVAL
+  retries=$((retries + 1))
+done
+
+if [ $retries -eq $MAX_RETRIES ]; then
+  echo "Failed to connect to database after $MAX_RETRIES attempts"
+  exit 1
+fi
+
+# Wait for Redis
+retries=0
+until check_redis || [ $retries -eq $MAX_RETRIES ]; do
+  echo "Waiting for Redis... (Attempt $((retries + 1))/$MAX_RETRIES)"
+  sleep $RETRY_INTERVAL
+  retries=$((retries + 1))
+done
+
+if [ $retries -eq $MAX_RETRIES ]; then
+  echo "Failed to connect to Redis after $MAX_RETRIES attempts"
+  exit 1
+fi
+
+echo "All dependencies are ready"
+exit 0

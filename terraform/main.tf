@@ -60,6 +60,7 @@ module "deployment" {
   db_endpoint            = module.database.db_instance_endpoint
   db_name                = var.db_name
   rails_master_key       = var.rails_master_key
+  aws_account_id         = var.aws_account_id
 }
 
 # ECS

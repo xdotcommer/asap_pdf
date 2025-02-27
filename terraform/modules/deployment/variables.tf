@@ -1,41 +1,44 @@
 variable "project_name" {
-  description = "The name of the project"
+  description = "Name of the project, used in resource naming"
   type        = string
 }
 
 variable "environment" {
-  description = "The environment (e.g., production, staging)"
+  description = "Environment name"
   type        = string
 }
 
 variable "github_repository" {
-  description = "The GitHub repository in format owner/repo"
-  type        = string
-}
-
-variable "db_username" {
-  description = "The database username"
+  description = "GitHub repository in format owner/repo"
   type        = string
 }
 
 variable "db_password_secret_arn" {
-  description = "The ARN of the secret containing the database password"
+  description = "ARN of the secret containing the database password"
+  type        = string
+}
+
+variable "db_username" {
+  description = "Database username"
   type        = string
 }
 
 variable "db_endpoint" {
-  description = "The database endpoint"
+  description = "Database endpoint"
   type        = string
 }
 
 variable "db_name" {
-  description = "The database name"
+  description = "Database name"
   type        = string
 }
 
 variable "rails_master_key" {
-  description = "The Rails master key for the application"
+  description = "Rails master key"
   type        = string
-  sensitive   = true
-  default     = null
+}
+
+variable "aws_account_id" {
+  description = "AWS Account ID"
+  type        = string
 }

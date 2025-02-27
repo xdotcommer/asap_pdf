@@ -106,7 +106,7 @@ resource "aws_iam_role_policy" "github_actions" {
         Effect = "Allow"
         Action = "iam:PassRole"
         Resource = [
-          "arn:aws:iam::225989367355:role/asap-pdf-production-task-execution-role"
+          "arn:aws:iam::${var.aws_account_id}:role/${var.project_name}-${var.environment}-task-execution-role"
         ]
       }
     ]

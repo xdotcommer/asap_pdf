@@ -10,6 +10,7 @@ env:
   ECS_CLUSTER: asap-pdf-production
   ECS_SERVICE: asap-pdf-production-service
   ECS_TASK_DEFINITION: .aws/task-definition.json
+  AWS_ACCOUNT_ID: 225989367355
 
 permissions:
   contents: read

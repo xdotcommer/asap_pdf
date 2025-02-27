@@ -92,7 +92,7 @@ class Document < ApplicationRecord
     }
   end
 
-  def infer_summary
+  def inference_summary
     if summary.nil?
       endpoint_url = "http://localhost:9000/2015-03-31/functions/function/invocations"
       payload = {

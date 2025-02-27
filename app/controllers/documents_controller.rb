@@ -76,7 +76,7 @@ class DocumentsController < AuthenticatedController
 
   def update_summary
     @document.update(
-      summary: @document.infer_summary
+      summary: @document.inference_summary
     )
     render json: {
       display_text: @document.summary

@@ -9,6 +9,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 gem "cssbundling-rails"
 gem "csv"
+gem "rest-client"
 
 gem "tzinfo-data", platforms: %i[windows jruby]
 

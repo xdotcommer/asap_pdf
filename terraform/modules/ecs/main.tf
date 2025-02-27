@@ -159,8 +159,8 @@ resource "aws_ecs_task_definition" "app" {
 
       portMappings = [
         {
-          containerPort = 80
-          hostPort      = var.container_port
+          containerPort = var.container_port
+          hostPort      = 0 # Dynamic port mapping
           protocol      = "tcp"
         }
       ]
@@ -172,7 +172,7 @@ resource "aws_ecs_task_definition" "app" {
         },
         {
           name  = "PORT"
-          value = "80"
+          value = tostring(var.container_port)
         },
         {
           name  = "REDIS_URL"
@@ -212,10 +212,10 @@ resource "aws_ecs_task_definition" "app" {
       ]
 
       healthCheck = {
-        command     = ["CMD-SHELL", "curl -f http://localhost:80/up || exit 1"]
+        command     = ["CMD-SHELL", "/rails/bin/healthcheck"]
         interval    = 30
-        timeout     = 5
-        retries     = 3
+        timeout     = 10
+        retries     = 2
         startPeriod = 60
       }
 

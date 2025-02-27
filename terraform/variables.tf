@@ -89,7 +89,7 @@ variable "ecs_max_size" {
 variable "container_port" {
   description = "Port the container listens on"
   type        = number
-  default     = 80 # Updated to match Dockerfile
+  default     = 3000 # Rails default port
 }
 
 variable "container_cpu" {

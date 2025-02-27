@@ -219,13 +219,6 @@ resource "aws_ecs_task_definition" "app" {
         startPeriod = 60
       }
 
-      dependsOn = [
-        {
-          containerName = "app"
-          condition     = "HEALTHY"
-        }
-      ]
-
       stopTimeout = 120
 
       memoryReservation = var.container_memory
@@ -235,7 +228,7 @@ resource "aws_ecs_task_definition" "app" {
         options = {
           "awslogs-group"         = "/ecs/${var.project_name}-${var.environment}"
           "awslogs-region"        = "us-east-1"
-          "awslogs-stream-prefix" = "app"
+          "awslogs-stream-prefix" = "web"
         }
       }
 

@@ -98,9 +98,18 @@ resource "aws_iam_role_policy" "github_actions" {
           "ecs:UpdateService",
           "ecs:RegisterTaskDefinition",
           "ecs:ListTaskDefinitions",
-          "ecs:DescribeTaskDefinition"
+          "ecs:DescribeTaskDefinition",
+          "ecs:ListTasks",
+          "ecs:DescribeTasks"
         ]
         Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:GetLogEvents"
+        ]
+        Resource = "arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/ecs/${var.project_name}-${var.environment}:*"
       },
       {
         Effect = "Allow"

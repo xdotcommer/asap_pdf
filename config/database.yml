@@ -16,5 +16,8 @@ test:
 
 production:
   <<: *default
-  host: localhost
-  database: access_pdf_production
+  url: <%= ENV['DATABASE_URL'] %>
+  connect_timeout: 2
+  checkout_timeout: 5
+  variables:
+    statement_timeout: 10000 # 10 seconds

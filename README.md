@@ -155,22 +155,8 @@ See [architecture.md](docs/architecture.md#document-storage-and-versioning) for 
    This starts LocalStack with S3 versioning enabled, matching production behavior.
 
 2. **Production Setup**:
-   ```bash
-   # Create and configure S3 bucket
-   aws s3 mb s3://cfa-aistudio-asap-pdf
-   aws s3api put-bucket-versioning \
-     --bucket cfa-aistudio-asap-pdf \
-     --versioning-configuration Status=Enabled
 
-   # Configure credentials
-   EDITOR="code --wait" bin/rails credentials:edit
-   ```
-   Add to credentials:
-   ```yaml
-   aws:
-     access_key_id: your_access_key_here
-     secret_access_key: your_secret_key_here
-   ```
+  See [deployment.md](docs/deployment.md) for detailed documentation on deployment.
 
 3. **S3 Path Structure**:
    The application uses a standardized S3 path structure for all documents:

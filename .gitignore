@@ -143,4 +143,8 @@ build/
 .notes/
 TODO.md
 
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfvars
 cline_docs

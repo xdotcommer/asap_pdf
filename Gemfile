@@ -2,7 +2,6 @@ source "https://rubygems.org"
 
 gem "rails", "~> 8.0.1"
 gem "propshaft"
-gem "sqlite3", ">= 2.1"
 gem "pg"
 gem "puma", ">= 5.0"
 gem "jsbundling-rails"
@@ -62,3 +61,5 @@ gem "grape", "~> 2.3"
 gem "grape-swagger"
 
 gem "paper_trail", "~> 16.0"
+
+gem "tailwindcss-ruby", "~> 4.0"

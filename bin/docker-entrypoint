@@ -6,9 +6,21 @@ if [ -z "${LD_PRELOAD+x}" ]; then
     export LD_PRELOAD
 fi
 
+echo "=== Container Environment ==="
+echo "Rails Environment: ${RAILS_ENV}"
+echo "Database URL: ${DATABASE_URL:-not set}"
+echo "Redis URL: ${REDIS_URL:-not set}"
+echo "Port: ${PORT:-not set}"
+echo "Memory Limit: $(cat /sys/fs/cgroup/memory.max 2>/dev/null || echo 'unknown')"
+echo "CPU Shares: $(cat /sys/fs/cgroup/cpu.max 2>/dev/null || echo 'unknown')"
+echo "=========================="
+
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+  echo "Running database migrations..."
   ./bin/rails db:prepare
+  echo "Database migrations complete"
 fi
 
+echo "Starting command: ${@}"
 exec "${@}"

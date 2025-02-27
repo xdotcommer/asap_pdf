@@ -151,4 +151,6 @@ terraform.tfvars
 python_components/config.json
 db/schema.rb
 
+python_components/config.json
+
 cline_docs

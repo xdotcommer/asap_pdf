@@ -1,11 +1,17 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
-# disabled
 
 name: Deploy to Amazon ECS
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
 
 env:
   AWS_REGION: us-east-1

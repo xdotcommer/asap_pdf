@@ -159,8 +159,8 @@ resource "aws_ecs_task_definition" "app" {
 
       portMappings = [
         {
-          containerPort = var.container_port
-          hostPort      = 0
+          containerPort = 80
+          hostPort      = var.container_port
           protocol      = "tcp"
         }
       ]
@@ -171,8 +171,20 @@ resource "aws_ecs_task_definition" "app" {
           value = var.environment
         },
         {
+          name  = "PORT"
+          value = "80"
+        },
+        {
           name  = "REDIS_URL"
           value = var.redis_url
+        },
+        {
+          name  = "WEB_CONCURRENCY"
+          value = "2"
+        },
+        {
+          name  = "MALLOC_ARENA_MAX"
+          value = "2"
         }
       ]
 
@@ -188,12 +200,14 @@ resource "aws_ecs_task_definition" "app" {
       ]
 
       healthCheck = {
-        command     = ["CMD-SHELL", "curl -f http://localhost:${var.container_port}/up || exit 1"]
-        interval    = 30
-        timeout     = 5
-        retries     = 3
-        startPeriod = 60
+        command     = ["CMD-SHELL", "/rails/bin/healthcheck"]
+        interval    = 60
+        timeout     = 30
+        retries     = 5
+        startPeriod = 180
       }
+
+      memoryReservation = var.container_memory
 
       logConfiguration = {
         logDriver = "awslogs"
@@ -233,7 +247,12 @@ resource "aws_ecs_service" "app" {
   desired_count   = 1
 
   deployment_maximum_percent         = 200
-  deployment_minimum_healthy_percent = 100
+  deployment_minimum_healthy_percent = 50
+
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
+  }
 
   ordered_placement_strategy {
     type  = "spread"

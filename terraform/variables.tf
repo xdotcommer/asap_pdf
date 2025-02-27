@@ -70,7 +70,7 @@ variable "redis_port" {
 variable "ecs_instance_type" {
   description = "EC2 instance type for ECS cluster"
   type        = string
-  default     = "t3.small"
+  default     = "t3.medium" # Increased for better resource availability
 }
 
 variable "ecs_min_size" {
@@ -89,19 +89,19 @@ variable "ecs_max_size" {
 variable "container_port" {
   description = "Port the container listens on"
   type        = number
-  default     = 3000
+  default     = 80 # Updated to match Dockerfile
 }
 
 variable "container_cpu" {
   description = "CPU units for the container (1024 = 1 vCPU)"
   type        = number
-  default     = 256
+  default     = 512 # Increased for better performance
 }
 
 variable "container_memory" {
   description = "Memory for the container in MiB"
   type        = number
-  default     = 512
+  default     = 1024 # Increased for Rails + Redis connections
 }
 
 # GitHub Configuration

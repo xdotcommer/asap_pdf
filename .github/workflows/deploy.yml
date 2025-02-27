@@ -47,7 +47,9 @@ jobs:
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
         aws-region: ${{ env.AWS_REGION }}
-        audience: sts.amazonaws.com
+        audience: "sts.amazonaws.com"
+        role-session-name: "GitHubActions-${{ github.run_id }}"
+        mask-aws-account-id: false
         role-duration-seconds: 900 # 15 minutes
 
     - name: Login to Amazon ECR

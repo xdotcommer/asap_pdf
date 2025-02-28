@@ -126,13 +126,12 @@ def get_predictions(feature_matrix, model_path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Uses paths to a CSV of PDFs and a model for document classification")
     parser.add_argument("pdfs_path", help="Path to CSV with PDF information")
-    parser.add_argument("model_path", help="Path to a Python pickle with a model")
     parser.add_argument("output_path", help="Path where a CSV with predictions will be saved")
     args = parser.parse_args()
 
     pdf_features = get_features(args.pdfs_path)
     pdf_feature_matrix = get_feature_matrix(pdf_features)
-    predictions, confidences = get_predictions(pdf_feature_matrix, args.model_path)
+    predictions, confidences = get_predictions(pdf_feature_matrix, "xgboost_model.json")
 
     output = pd.read_csv(args.pdfs_path)
     output['predicted_category'] = predictions

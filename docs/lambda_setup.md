@@ -37,18 +37,6 @@ Replace `your-gemini-api-key` with your actual Gemini API key from the Google Cl
    ```
    When prompted, enter your Gemini API key.
 
-3. Install the Lambda function dependencies:
-   ```bash
-   cd python_components/summary
-   pip install -r requirements.txt
-   ```
-
-4. Run the Lambda function locally:
-   ```bash
-   cd python_components/summary
-   python -m uvicorn lambda_function:handler --port 9000
-   ```
-
 ## Testing the Setup
 
 1. The Lambda function should now be running at `http://localhost:9000`

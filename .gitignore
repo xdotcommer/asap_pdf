@@ -149,5 +149,6 @@ terraform.tfstate.backup
 terraform.tfvars
 
 python_components/config.json
+db/schema.rb
 
 cline_docs

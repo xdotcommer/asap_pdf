@@ -68,6 +68,7 @@ The application includes several Python components for PDF processing:
 - Document Classifier: Determines document types using LLM
 - Policy Reviewer: Checks WCAG 2.1 compliance
 - Document Transformer: Converts PDFs to MD/HTML
+- Document Summarizer: Generates summaries using Gemini Pro ([setup instructions](docs/lambda_setup.md))
 
 To set up the Python components:
 

@@ -147,4 +147,6 @@ TODO.md
 terraform.tfstate
 terraform.tfstate.backup
 terraform.tfvars
+db/schema.rb
+
 cline_docs

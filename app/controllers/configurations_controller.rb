@@ -1,7 +1,8 @@
 class ConfigurationsController < ApplicationController
   def edit
     @config = JSON.parse(File.read(Rails.root.join("python_components", "config.json")))
-    @models = JSON.parse(File.read(Rails.root.join("python_components", "models.json")))
+    models_data = JSON.parse(File.read(Rails.root.join("python_components", "models.json")))
+    @models = models_data.keys
   end
 
   def update

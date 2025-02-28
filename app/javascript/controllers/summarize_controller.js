@@ -8,7 +8,6 @@ export default class extends Controller {
     }
 
     async getSummary() {
-        console.log('getSummary called with document ID:', this.documentIdValue)
         try {
             this.buttonTarget.classList.add('hidden');
             this.preloaderTarget.classList.remove('hidden')

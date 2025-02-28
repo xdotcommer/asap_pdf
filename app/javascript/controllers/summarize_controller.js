@@ -7,6 +7,10 @@ export default class extends Controller {
         documentId: Number,
     }
 
+    connect() {
+          console.log("I made it")
+    }
+
     async getSummary() {
         try {
             this.buttonTarget.classList.add('hidden');

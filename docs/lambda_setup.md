@@ -11,7 +11,7 @@ The document summarization feature uses a local Lambda function that leverages G
 
 ## Configuration
 
-1. Create a `config.json` file in the `python_components` directory:
+1. Create a `config.json` file in the `python_components/summary` directory:
 
 ```json
 {

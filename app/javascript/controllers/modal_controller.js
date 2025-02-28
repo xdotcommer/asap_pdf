@@ -4,8 +4,7 @@ export default class extends Controller {
   static targets = ["summaryView", "metadataView", "historyView", "summaryButton", "metadataButton", "historyButton"]
 
   connect() {
-    // Initialize with Summary view
-    this.showSummaryView()
+    document.addEventListener("turbo:frame-render", this.showSummaryView.bind(this))
   }
 
   submitAndClose(event) {

@@ -1,12 +1,12 @@
 class ConfigurationsController < ApplicationController
   def edit
-    @config = JSON.parse(File.read(Rails.root.join("python_components", "config.json")))
-    models_data = JSON.parse(File.read(Rails.root.join("python_components", "models.json")))
+    @config = JSON.parse(File.read(Rails.root.join("python_components", "summary", "config.json")))
+    models_data = JSON.parse(File.read(Rails.root.join("python_components", "summary", "models.json")))
     @models = models_data.keys
   end
 
   def update
-    config_path = Rails.root.join("python_components", "config.json")
+    config_path = Rails.root.join("python_components", "summary", "config.json")
     config = JSON.parse(File.read(config_path))
 
     config["active_model"] = params[:config][:active_model]

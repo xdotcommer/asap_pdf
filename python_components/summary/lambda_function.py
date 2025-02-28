@@ -8,11 +8,11 @@ import pdf2image
 import llm
 
 def get_config():
-    with open('python_components/config.json', 'r') as f:
+    with open('config.json', 'r') as f:
         return json.load(f)
 
 def get_models():
-    with open('python_components/models.json', 'r') as f:
+    with open('models.json', 'r') as f:
         return json.load(f)
 
 def get_supported_models(local_mode):

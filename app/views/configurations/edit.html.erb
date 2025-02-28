@@ -1,0 +1,67 @@
+<div class="flex justify-center px-4 sm:px-6 lg:px-8">
+  <div class="card w-[768px] bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title text-2xl mb-6">
+        <i class="fas fa-wand-magic-sparkles mr-2"></i>
+        AI Configuration Settings
+      </h2>
+      <%= form_with(scope: :config, url: configuration_path, method: :patch) do |f| %>
+        <div class="space-y-6">
+          <div class="form-control w-full">
+            <%= f.label :active_model, "Active Model", class: "label" %>
+            <div class="mt-2">
+              <%= f.select :active_model,
+                  options_for_select(@models, @config["active_model"]),
+                  {},
+                  class: "select select-bordered w-full" %>
+            </div>
+          </div>
+          <div class="form-control w-full">
+            <%= f.label :key, "API Key", class: "label" %>
+            <div class="mt-2">
+              <div class="join w-full" data-controller="password-toggle">
+                <%= f.password_field :key,
+                    value: @config["key"],
+                    autocomplete: "new-password",
+                    class: "input input-bordered join-item w-full font-mono",
+                    data: { password_toggle_target: "input" } %>
+                <button type="button" class="btn join-item" data-action="click->password-toggle#toggle">
+                  <i class="fas fa-eye" data-password-toggle-target="icon"></i>
+                </button>
+              </div>
+              <div class="mt-2 text-sm text-gray-600">
+                <p>Need a Google Gemini API key?
+                  <%= link_to "Generate one here", "https://aistudio.google.com/app/apikey",
+                      target: "_blank",
+                      class: "link link-primary" %>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-control w-full">
+            <%= f.label :page_limit, "Page Limit", class: "label" %>
+            <div class="mt-2">
+              <%= f.select :page_limit,
+                  options_for_select((1..20).to_a, @config["page_limit"]),
+                  {},
+                  class: "select select-bordered w-full" %>
+            </div>
+          </div>
+          <div class="form-control w-full">
+            <%= f.label :prompt, "Prompt", class: "label" %>
+            <div class="mt-2">
+              <%= f.text_area :prompt,
+                  value: @config["prompt"],
+                  rows: 4,
+                  class: "textarea textarea-bordered w-full" %>
+            </div>
+          </div>
+          <div class="card-actions justify-end mt-6">
+            <%= f.submit "Save Changes",
+                class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

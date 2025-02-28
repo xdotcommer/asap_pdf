@@ -14,44 +14,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_24_203333) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "document_workflow_histories", force: :cascade do |t|
-    t.bigint "document_id", null: false
-    t.bigint "user_id"
-    t.string "status_type"
-    t.string "from_status"
-    t.string "to_status"
-    t.string "action_type"
-    t.jsonb "metadata"
-    t.text "notes"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["document_id"], name: "index_document_workflow_histories_on_document_id"
-    t.index ["user_id"], name: "index_document_workflow_histories_on_user_id"
-  end
-
   create_table "documents", force: :cascade do |t|
-    t.string "file_name"
-    t.string "url"
+    t.text "file_name"
+    t.text "url"
     t.integer "file_size"
-    t.string "source"
+    t.text "source"
     t.string "document_status", default: "discovered"
     t.string "classification_status", default: "classification_pending"
     t.string "policy_review_status", default: "policy_pending"
     t.string "recommendation_status", default: "recommendation_pending"
     t.string "status"
-    t.string "document_category"
+    t.string "document_category", default: "Unknown"
     t.float "document_category_confidence"
-    t.text "accessibility_recommendation"
+    t.text "accessibility_recommendation", default: "Unknown"
     t.text "accessibility_action"
     t.datetime "action_taken_on"
-    t.string "title"
-    t.string "author"
-    t.string "subject"
-    t.string "keywords"
+    t.text "title"
+    t.text "author"
+    t.text "subject"
+    t.text "keywords"
     t.datetime "creation_date"
     t.datetime "modification_date"
-    t.string "producer"
-    t.string "pdf_version"
+    t.text "producer"
+    t.text "pdf_version"
     t.integer "number_of_pages"
     t.bigint "site_id", null: false
     t.datetime "created_at", null: false
@@ -107,8 +92,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_24_203333) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
-  add_foreign_key "document_workflow_histories", "documents"
-  add_foreign_key "document_workflow_histories", "users"
   add_foreign_key "documents", "sites"
   add_foreign_key "sessions", "users"
   add_foreign_key "sites", "users"

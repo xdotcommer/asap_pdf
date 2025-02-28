@@ -31,5 +31,7 @@ Rails.application.routes.draw do
   mount AsapPdf::API => "/api"
   get "api-docs", to: "api_docs#index"
 
+  resource :configuration, only: [:edit, :update]
+
   root "sites#index"
 end

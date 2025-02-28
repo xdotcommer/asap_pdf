@@ -535,6 +535,7 @@ DEPENDENCIES
   rails (~> 8.0.1)
   rails-controller-testing
   redis (~> 5.4.0)
+  rest-client
   rspec (~> 3.13)
   rspec-rails (~> 7.1)
   ruby-lsp (~> 0.23)

@@ -96,7 +96,7 @@ class Document < ApplicationRecord
     if summary.nil?
       endpoint_url = "http://localhost:9000/2015-03-31/functions/function/invocations"
       payload = {
-        model_name: "anthropic/claude-3-5-haiku-latest",
+        model_name: "gemini-1.5-pro-latest",
         document_url: url,
         page_limit: 7
       }.to_json

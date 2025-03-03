@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       patch :update_accessibility_recommendation
       patch :update_notes
       patch :update_summary
+      patch :update_html
     end
   end
 

@@ -1,17 +1,17 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static targets = ["display", "button", "preloader"]
+    static targets = ["button", "preloader", "display"]
 
     static values = {
         documentId: Number,
     }
 
-    async getSummary() {
+    async getHtml() {
         try {
             this.buttonTarget.classList.add('hidden');
             this.preloaderTarget.classList.remove('hidden')
-            const response = await fetch(`/documents/${this.documentIdValue}/update_summary`, {
+            const response = await fetch(`/documents/${this.documentIdValue}/update_html`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -20,15 +20,15 @@ export default class extends Controller {
                 },
             })
             if (response.ok) {
-                const jsonSummary = await response.json()
-                this.displayTarget.textContent = jsonSummary.display_text;
+                const jsonHTML = await response.json()
+                this.displayTarget.innerHTML = jsonHTML.display_text;
                 this.preloaderTarget.classList.add('hidden')
             } else {
-                this.displayTarget.textContent = 'An error occurred summarizing this document. Please try again later.';
+                this.displayTarget.innerHTML = 'An error occurred creating html for this document. Please try again later.';
                 throw new Error("Response was not OK")
             }
         } catch (error) {
-            console.error("Error summarizing document:", error)
+            console.error("Error creating html for document:", error)
             this.preloaderTarget.classList.add('hidden')
         }
     }

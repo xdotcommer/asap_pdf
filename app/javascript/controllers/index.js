@@ -22,6 +22,9 @@ application.register("modal", ModalController)
 import ModalNotesController from "./modal_notes_controller"
 application.register("modal-notes", ModalNotesController)
 
+import PasswordToggleController from "./password_toggle_controller"
+application.register("password-toggle", PasswordToggleController)
+
 import StatusController from "./status_controller"
 application.register("status", StatusController)
 
@@ -30,6 +33,9 @@ application.register("summarize", SummarizeController)
 
 import TextEditController from "./text_edit_controller"
 application.register("text-edit", TextEditController)
+
+import ToHtmlController from "./to_html_controller"
+application.register("to-html", ToHtmlController)
 
 import ToastController from "./toast_controller"
 application.register("toast", ToastController)

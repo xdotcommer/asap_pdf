@@ -28,6 +28,19 @@
           </button>
         <% end %>
       </div>
+      <div data-controller="to-html" data-to-html-document-id-value="<%= document.id %>" class="flex space-x-2 items-start mb-4 text-wrap">
+        <code data-to-html-target="display"><%= document.html %></code>
+        <% if document.html.nil? %>
+          <button data-action="click->to-html#getHtml" data-to-html-target="button" class="btn btn-primary btn-sm">
+            <i class="fas fa-wand-magic-sparkles mr-1"></i>
+            Convert Document to HTML
+          </button>
+          <button class="btn btn-primary btn-sm hidden" data-to-html-target="preloader">
+            <span class="loading loading-spinner"></span>
+            Converting...
+          </button>
+        <% end %>
+      </div>
       <iframe src="<%= document.url %>#pagemode=none&toolbar=1" class="w-full h-[calc(90vh-8rem)]" type="application/pdf"></iframe>
     </div>
     <!-- PDF Details View -->

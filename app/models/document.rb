@@ -98,7 +98,8 @@ class Document < ApplicationRecord
       payload = {
         model_name: "gemini-1.5-pro-latest",
         document_url: url,
-        page_limit: 7
+        page_limit: 7,
+        mode: 'summarize',
       }.to_json
       begin
         response = RestClient.post(endpoint_url, payload, {content_type: :json, accept: :json})
@@ -112,6 +113,29 @@ class Document < ApplicationRecord
       end
     end
     summary
+  end
+
+  def inference_html
+    if html.nil?
+      endpoint_url = "http://localhost:9000/2015-03-31/functions/function/invocations"
+      payload = {
+        model_name: "gemini-1.5-pro-latest",
+        document_url: url,
+        page_limit: 7,
+        mode: 'to_html',
+      }.to_json
+      begin
+        response = RestClient.post(endpoint_url, payload, {content_type: :json, accept: :json})
+        self.html = response.body
+      rescue RestClient::ExceptionWithResponse => e
+        puts "Error: #{e.response.code} #{e.response.body}"
+      rescue RestClient::Exception => e
+        puts "A RestClient exception occurred: #{e.message}"
+      rescue JSON::ParserError => e
+        puts "The server returned a malformed JSON response: #{e.message}"
+      end
+    end
+    html
   end
 
   private

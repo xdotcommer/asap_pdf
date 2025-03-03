@@ -73,18 +73,24 @@ def pdf_to_attachments(pdf_path: str, output_path: str, page_limit: int) -> list
     return attachments
 
 
-def get_summary(model_name: str, api_key: str, attachments: list) -> str:
+def get_summary(model_name: str, api_key: str, attachments: list, mode: str) -> str:
     model = llm.get_model(model_name)
     model.key = api_key
-    response = model.prompt(
-        "The following images show a local government document. Could you summarize the contents in two or three sentences?",
-        attachments=attachments
-    )
+    if mode == 'summarize':
+        response = model.prompt(
+            "The following images show a local government document. Could you summarize the contents in two or three sentences?",
+            attachments=attachments
+        )
+    if mode == 'to_html':
+        response = model.prompt(
+            "The following images show a local government document. Could you convert the complete contents to HTML?",
+            attachments=attachments
+        )
     return response.text()
 
 
 def handler(event, context):
-    for required_key in ('model_name', 'document_url', 'page_limit'):
+    for required_key in ('model_name', 'document_url', 'page_limit', 'mode'):
         if required_key not in event:
             raise ValueError(f'Function called without required parameter, {required_key}.')
 
@@ -117,4 +123,4 @@ def handler(event, context):
 
     # Send images off to our friend.
     logger.info(f'Summarizing with {event["model_name"]}...')
-    return get_summary(event['model_name'], api_key, attachments)
+    return get_summary(event['model_name'], api_key, attachments, event['mode'])

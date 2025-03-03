@@ -52,8 +52,11 @@ if Rails.env.development?
 
   # Process Austin documents
   puts "\nProcessing Austin documents..."
-  austin_path = Rails.root.join("db", "seeds", "austin.csv")
-  process_csv_documents(austin, austin_path)
+  austin.process_csv_documents(Rails.root.join("db", "seeds", "austin.csv"))
+
+  # Process Salt Lake City documents
+  puts "\nProcessing Salt Lake City documents..."
+  slc.process_csv_documents(Rails.root.join("db", "seeds", "salt_lake_city.csv"))
 
   # Process San Rafael documents
   puts "\nProcessing San Rafael documents..."

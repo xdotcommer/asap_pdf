@@ -6,7 +6,7 @@
         <div class="flex-1 min-w-0 text-center">
           <h2 class="text-sm font-semibold break-words whitespace-normal"><%= document.file_name %></h2>
           <div class="text-sm text-gray-600">
-            <% source = document_source(document.source) %>
+            <% source = document_source(document.primary_source) %>
             <span class="break-words whitespace-normal">
               <%= document.site.website %> ▸
               <%= source[:text] %>

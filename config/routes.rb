@@ -24,11 +24,14 @@ Rails.application.routes.draw do
       patch :update_document_category
       patch :update_accessibility_recommendation
       patch :update_notes
+      patch :update_summary
     end
   end
 
   mount AsapPdf::API => "/api"
   get "api-docs", to: "api_docs#index"
+
+  resource :configuration, only: [:edit, :update]
 
   root "sites#index"
 end

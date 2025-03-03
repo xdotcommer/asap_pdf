@@ -37,7 +37,7 @@ class Document < ApplicationRecord
   CONTENT_TYPES = [
     "Unknown", "Agreement", "Agenda", "Brochure", "Diagram", "Flyer", "Form", "Form Instruction",
     "Job Announcement", "Job Description", "Letter", "Map", "Memo", "Policy", "Slides",
-    "Press", "Procurement", "Notice", "Report", "Spreadsheet"
+    "Press", "Procurement", "Notice", "Report", "Spreadsheet", "Other"
   ].freeze
 
   DECISION_TYPES = ["Unknown", "Leave", "Convert", "Remove", "Remediate"].freeze
@@ -90,6 +90,63 @@ class Document < ApplicationRecord
       size: version.size,
       etag: version.etag
     }
+  end
+
+  def inference_summary
+    if summary.nil?
+      endpoint_url = "http://localhost:9000/2015-03-31/functions/function/invocations"
+      payload = {
+        model_name: "gemini-1.5-pro-latest",
+        document_url: url,
+        page_limit: 7
+      }.to_json
+      begin
+        response = RestClient.post(endpoint_url, payload, {content_type: :json, accept: :json})
+        self.summary = response.body
+      rescue RestClient::ExceptionWithResponse => e
+        puts "Error: #{e.response.code} #{e.response.body}"
+      rescue RestClient::Exception => e
+        puts "A RestClient exception occurred: #{e.message}"
+      rescue JSON::ParserError => e
+        puts "The server returned a malformed JSON response: #{e.message}"
+      end
+    end
+    summary
+  end
+
+  def source
+    value = read_attribute(:source)
+    return nil if value.nil?
+
+    begin
+      JSON.parse(value)
+    rescue JSON::ParserError
+      value
+    end
+  end
+
+  def source=(value)
+    # If value is already a JSON string, store as-is
+    # Otherwise convert to JSON
+    json_value = if value.is_a?(String)
+      begin
+        # Try parsing to validate it's proper JSON
+        JSON.parse(value)
+        value # If parsing succeeds, use original string
+      rescue JSON::ParserError
+        value.to_json # Not JSON, so convert it
+      end
+    else
+      value.to_json
+    end
+    write_attribute(:source, json_value)
+  end
+
+  def primary_source
+    urls = source
+    return nil if urls.nil?
+
+    urls.is_a?(Array) ? urls.first : urls
   end
 
   private

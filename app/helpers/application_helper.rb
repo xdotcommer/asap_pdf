@@ -6,12 +6,19 @@ module ApplicationHelper
     url = source.strip
 
     # Format the display text
-    # Remove protocol and domain, keep path
-    path = source.sub(%r{^https?://[^/]+/}, "")
-    # Remove trailing slash if present
-    path = path.sub(/\/$/, "")
-    # Replace forward slashes with arrow
-    text = path.gsub("/", " ▸ ")
+    begin
+      uri = URI.parse(url)
+      # Get just the path component, remove leading/trailing slashes
+      path = uri.path.sub(/^\//, "").sub(/\/$/, "")
+      # If there's no path, use the host (domain)
+      text = if path.blank?
+        url
+      else
+        path.gsub("/", " ▸ ")
+      end
+    rescue URI::InvalidURIError
+      text = ""
+    end
 
     {text: text, url: url}
   end

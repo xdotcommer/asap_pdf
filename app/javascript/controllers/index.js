@@ -4,22 +4,32 @@
 
 import { application } from "./application"
 
-import HelloController from "./hello_controller"
-import ToastController from "./toast_controller"
-import ModalController from "./modal_controller"
 import DropdownController from "./dropdown_controller"
-import FilterController from "./filter_controller"
-import StatusController from "./status_controller"
-import DropdownEditController from "./dropdown_edit_controller"
-import TextEditController from "./text_edit_controller"
-import ModalNotesController from "./modal_notes_controller"
-
-application.register("hello", HelloController)
-application.register("toast", ToastController)
-application.register("modal", ModalController)
 application.register("dropdown", DropdownController)
-application.register("filter", FilterController)
-application.register("status", StatusController)
+
+import DropdownEditController from "./dropdown_edit_controller"
 application.register("dropdown-edit", DropdownEditController)
-application.register("text-edit", TextEditController)
+
+import FilterController from "./filter_controller"
+application.register("filter", FilterController)
+
+import HelloController from "./hello_controller"
+application.register("hello", HelloController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
+
+import ModalNotesController from "./modal_notes_controller"
 application.register("modal-notes", ModalNotesController)
+
+import StatusController from "./status_controller"
+application.register("status", StatusController)
+
+import SummarizeController from "./summarize_controller"
+application.register("summarize", SummarizeController)
+
+import TextEditController from "./text_edit_controller"
+application.register("text-edit", TextEditController)
+
+import ToastController from "./toast_controller"
+application.register("toast", ToastController)

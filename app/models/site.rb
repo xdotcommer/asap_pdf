@@ -37,11 +37,12 @@ class Site < ApplicationRecord
   end
 
   def discover_documents!(document_data)
-    document_data.map do |data|
+    created_or_updated = []
+    document_data.each do |data|
       url = data[:url]
       modification_date = data[:modification_date]
 
-      existing_document = documents.find_by(url: url)
+      existing_document = documents.find_by("url = ?", url)
 
       if existing_document
         if existing_document.modification_date.to_i != modification_date.to_i
@@ -50,19 +51,78 @@ class Site < ApplicationRecord
             file_name: clean_string(data[:file_name]) || existing_document.file_name
           )
         end
-        existing_document
+        created_or_updated << existing_document
       else
-        documents.create! attributes_from(data).reverse_merge(
-          file_name: clean_string(data[:file_name]) || File.basename(URI.parse(url).path)
-        )
+        begin
+          if (new_doc = documents.create!(attributes_from(data).reverse_merge(
+            file_name: clean_string(data[:file_name]) || File.basename(URI.parse(url).path)
+          )))
+            created_or_updated << new_doc
+          end
+        rescue ActiveRecord::RecordInvalid => e
+          puts "Skipping Error: #{e.message}"
+        end
       end
     end
+
+    created_or_updated
+  end
+
+  def process_csv_documents(csv_path)
+    return unless File.exist?(csv_path)
+
+    documents = []
+    skipped = 0
+
+    CSV.foreach(csv_path, headers: true) do |row|
+      # Encode URL while preserving basic URL structure
+      encoded_url = URI.encode_www_form_component(row["url"])
+        .gsub("%3A", ":")  # Restore colons
+        .gsub("%2F", "/")  # Restore forward slashes
+
+      # Parse file size (remove KB suffix and convert to float)
+      file_size = row["file_size"]&.gsub("KB", "")&.strip&.to_f
+
+      # Parse source from CSV - handle the ['url'] format
+      source = if row["source"]
+        # Extract URLs from the string
+        urls = row["source"].scan(/'([^']+)'/).flatten
+        urls.empty? ? nil : urls
+      end
+
+      documents << {
+        url: encoded_url,
+        file_name: row["file_name"],
+        file_size: file_size,
+        author: row["author"],
+        subject: row["subject"],
+        pdf_version: row["version"],
+        keywords: row["keywords"],
+        creation_date: row["creation_date"],
+        modification_date: row["last_modified_date"],
+        producer: row["producer"],
+        source: source,
+        predicted_category: row["predicted_category"],
+        predicted_category_confidence: row["predicted_category_confidence"],
+        number_of_pages: row["number_of_pages"]&.to_i
+      }
+    rescue URI::InvalidURIError => e
+      puts "Skipping invalid URL: #{row["url"]}"
+      puts "Error: #{e.message}"
+      skipped += 1
+    end
+
+    created_docs = discover_documents!(documents)
+    puts "Created/Updated #{created_docs.size} documents for #{name}"
+    puts "Skipped #{skipped} documents due to invalid URLs" if skipped > 0
   end
 
   private
 
   def attributes_from(data)
     {
+      document_category: data[:predicted_category],
+      document_category_confidence: data[:predicted_category_confidence],
       url: data[:url],
       modification_date: data[:modification_date],
       file_size: data[:file_size],
@@ -72,7 +132,11 @@ class Site < ApplicationRecord
       creation_date: data[:creation_date],
       producer: clean_string(data[:producer]),
       pdf_version: clean_string(data[:pdf_version]),
-      source: data[:source],
+      source: if data[:source].nil?
+                nil
+              else
+                data[:source].is_a?(Array) ? data[:source].to_json : [data[:source]].to_json
+              end,
       number_of_pages: data[:number_of_pages],
       document_status: "discovered"
     }

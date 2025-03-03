@@ -28,6 +28,25 @@ RSpec.describe Document, type: :model do
     expect(Document.new.recommendation_status).to eq("recommendation_pending")
   end
 
+  describe "#primary_source" do
+    let(:document) { Document.new }
+
+    it "returns nil when source is nil" do
+      document.source = nil
+      expect(document.primary_source).to be_nil
+    end
+
+    it "returns first URL when source is an array" do
+      document.source = ["http://first.com", "http://second.com"]
+      expect(document.primary_source).to eq("http://first.com")
+    end
+
+    it "returns source when it's not an array" do
+      document.source = "http://single.com"
+      expect(document.primary_source).to eq("http://single.com")
+    end
+  end
+
   describe "S3 storage" do
     let(:site) { create(:site, primary_url: "https://www.city.org") }
     let(:document) { create(:document, site: site) }

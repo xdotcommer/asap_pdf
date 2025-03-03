@@ -1,8 +1,8 @@
 class DocumentsController < AuthenticatedController
   protect_from_forgery with: :exception
-  skip_before_action :verify_authenticity_token, only: [:update_document_category, :update_accessibility_recommendation, :update_status, :update_notes]
-  before_action :set_site, except: [:update_document_category, :update_accessibility_recommendation, :update_notes]
-  before_action :set_document_for_update, only: [:update_document_category, :update_accessibility_recommendation, :update_notes]
+  skip_before_action :verify_authenticity_token, only: [:update_document_category, :update_accessibility_recommendation, :update_status, :update_notes, :update_summary]
+  before_action :set_site, except: [:update_document_category, :update_accessibility_recommendation, :update_notes, :update_summary]
+  before_action :set_document_for_update, only: [:update_document_category, :update_accessibility_recommendation, :update_notes, :update_summary]
   before_action :set_document, only: [:modal_content]
 
   def modal_content
@@ -72,6 +72,17 @@ class DocumentsController < AuthenticatedController
     else
       render json: {success: false, error: @document.errors.full_messages}, status: :unprocessable_entity
     end
+  end
+
+  def update_summary
+    if @document.summary.nil?
+      @document.update(
+        summary: @document.inference_summary
+      )
+    end
+    render json: {
+      display_text: @document.summary&.undump
+    }
   end
 
   private

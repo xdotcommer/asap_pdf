@@ -20,7 +20,13 @@ black_change_count=$(echo "$black_output" | grep '^---' | wc -l) # Count diff li
 
 # Run flake8 and capture output
 flake8_output="$(flake8 --max-line-length=100 $1)"
-flake8_error_count=$(echo "$flake8_output" | wc -l)
+trimmed_output=$(echo "$flake8_output" | tr -d '[:space:]')
+
+if [ -z "$trimmed_output" ]; then
+  flake8_error_count=0
+else
+  flake8_error_count=$(echo "$flake8_output" | wc -l)
+fi
 
 # Display outputs (for debugging)
 echo "Isort Output:"

@@ -5,6 +5,11 @@ ISORT_BUDGET=0   # Allow no isort changes
 BLACK_BUDGET=0   # Allow no black changes.
 FLAKE8_BUDGET=0  # Allow no flake8 errors
 
+if [ -z "$1" ]; then
+    echo "Error: Pass in a path to check, like **/*.py"
+    exit 1
+fi
+
 # Run isort and capture output
 isort_output="$(isort $1 --check-only --diff)"
 isort_change_count=$(echo "$isort_output" | grep '^---' | wc -l) # Count diff lines

@@ -60,6 +60,12 @@ PrePush:
       echo "✅ Snyk security checks passed";
       exit 0']
 
+  PythonLinting:
+    enabled: true
+    command: ['docker run --rm -t asap_pdf:ci ./run_linting.sh **/*.py']
+    include:
+      - 'python_components/**/*.py'
+
 PostCheckout:
   ALL:
     quiet: true

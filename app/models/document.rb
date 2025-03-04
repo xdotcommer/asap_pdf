@@ -34,20 +34,19 @@ class Document < ApplicationRecord
     scope
   }
 
+  DEFAULT_DOCUMENT_CATEGORY, DEFAULT_ACCESSIBILITY_RECOMMENDATION = %w[Other Unknown].freeze
+
   CONTENT_TYPES = [
-    "Unknown", "Agreement", "Agenda", "Brochure", "Diagram", "Flyer", "Form", "Form Instruction",
+    DEFAULT_DOCUMENT_CATEGORY, "Agreement", "Agenda", "Brochure", "Diagram", "Flyer", "Form", "Form Instruction",
     "Job Announcement", "Job Description", "Letter", "Map", "Memo", "Policy", "Slides",
-    "Press", "Procurement", "Notice", "Report", "Spreadsheet", "Other"
+    "Press", "Procurement", "Notice", "Report", "Spreadsheet", "Unknown"
   ].freeze
 
-  DECISION_TYPES = ["Unknown", "Leave", "Convert", "Remove", "Remediate"].freeze
+  DECISION_TYPES = [DEFAULT_ACCESSIBILITY_RECOMMENDATION, "Leave", "Convert", "Remove", "Remediate"].freeze
 
   validates :file_name, presence: true
   validates :url, presence: true, format: {with: URI::DEFAULT_PARSER.make_regexp}
   validates :document_status, presence: true, inclusion: {in: %w[discovered downloaded]}
-  validates :classification_status, presence: true, inclusion: {in: %w[classification_pending auto_classified classified reclassified]}
-  validates :policy_review_status, presence: true, inclusion: {in: %w[policy_pending auto_reviewed reviewed rereviewed]}
-  validates :recommendation_status, presence: true, inclusion: {in: %w[recommendation_pending auto_recommendation recommendation_adjusted recommended]}
   validates :document_category, inclusion: {in: CONTENT_TYPES}, allow_nil: true
   validates :accessibility_recommendation, inclusion: {in: DECISION_TYPES}, allow_nil: true
 
@@ -161,8 +160,5 @@ class Document < ApplicationRecord
 
   def set_defaults
     self.document_status = "discovered" unless document_status
-    self.classification_status = "classification_pending" unless classification_status
-    self.policy_review_status = "policy_pending" unless policy_review_status
-    self.recommendation_status = "recommendation_pending" unless recommendation_status
   end
 end

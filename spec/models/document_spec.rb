@@ -13,21 +13,6 @@ RSpec.describe Document, type: :model do
     expect(Document.new.document_status).to eq("discovered")
   end
 
-  it { should validate_inclusion_of(:classification_status).in_array(%w[classification_pending auto_classified classified reclassified]) }
-  it "defaults classification_status to classification_pending" do
-    expect(Document.new.classification_status).to eq("classification_pending")
-  end
-
-  it { should validate_inclusion_of(:policy_review_status).in_array(%w[policy_pending auto_reviewed reviewed rereviewed]) }
-  it "defaults policy_review_status to policy_pending" do
-    expect(Document.new.policy_review_status).to eq("policy_pending")
-  end
-
-  it { should validate_inclusion_of(:recommendation_status).in_array(%w[recommendation_pending auto_recommendation recommendation_adjusted recommended]) }
-  it "defaults recommendation_status to recommendation_pending" do
-    expect(Document.new.recommendation_status).to eq("recommendation_pending")
-  end
-
   describe "#primary_source" do
     let(:document) { Document.new }
 

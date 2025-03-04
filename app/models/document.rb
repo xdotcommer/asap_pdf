@@ -37,7 +37,7 @@ class Document < ApplicationRecord
   DEFAULT_DOCUMENT_CATEGORY, DEFAULT_ACCESSIBILITY_RECOMMENDATION = %w[Other Unknown].freeze
 
   CONTENT_TYPES = [
-    DEFAULT_DOCUMENT_CATEGORY, "Agreement", "Agenda", "Brochure", "Diagram", "Flyer", "Form", "Form Instruction",
+    DEFAULT_DOCUMENT_CATEGORY, "Agreement", "Agenda", "Brochure", "Diagram", "Flyer", "Form", "Form Instructions",
     "Job Announcement", "Job Description", "Letter", "Map", "Memo", "Policy", "Slides",
     "Press", "Procurement", "Notice", "Report", "Spreadsheet", "Unknown"
   ].freeze

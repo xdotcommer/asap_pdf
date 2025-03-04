@@ -41,11 +41,11 @@ def get_words_around_links(pdfs):
         # time.sleep(0.5) # Half a second delay?
         text_around_links = []
         for source in row['source_list']:
-            response = requests.get(source) # Get page
-            if response.status_code >= 400:
-                continue
-
             try:
+                response = requests.get(source, timeout=120) # Get page
+                if response.status_code >= 400:
+                    continue
+
                 html_content = response.content # Parse the source page
                 soup = BeautifulSoup(html_content, 'html.parser')
                 tags = soup.find_all(lambda x: x.get('href') == row['url'])
@@ -106,8 +106,8 @@ def get_predictions(feature_matrix, model_path):
     # The trained model must have the same columns as the data we're predicting on
     model_features = set(model.get_booster().feature_names)
     candidate_features = set(feature_matrix.columns)
-    if len(model_features) > len(candidate_features):
-        missing_features = list(model_features - candidate_features)
+    missing_features = list(model_features - candidate_features)
+    if len(missing_features) > 0:
         missing_feature_matrix = pd.DataFrame(np.zeros((len(feature_matrix), len(missing_features))), columns=missing_features)
         feature_matrix = pd.concat([feature_matrix, missing_feature_matrix], axis=1)
 

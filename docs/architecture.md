@@ -4,8 +4,6 @@
 
 This document outlines the architecture of the PDF processing pipeline, including the integrated Python components, AWS services, and other infrastructure elements. The system is designed to be scalable, maintainable, and follows modern development practices with comprehensive testing and monitoring.
 
-![asap-sequence-diagram.png](asap-sequence-diagram.png "ASAP Sequence Diagram)
-
 ## Development Tools and Practices
 
 The project employs several tools to maintain code quality and security:
@@ -74,6 +72,10 @@ The project employs several tools to maintain code quality and security:
    - **RDS**: Manages the Rails application database
    - **Fargate**: Runs the Rails application
    - **Elasticache (Redis)**: Manages background jobs and job queuing
+
+## Sequence Diagram for the AI Processing Pipeline
+
+![asap-sequence-diagram.png](asap-sequence-diagram.png "ASAP Sequence Diagram")
 
 ## Document Storage and Versioning
 

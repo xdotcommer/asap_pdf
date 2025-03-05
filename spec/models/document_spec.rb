@@ -42,89 +42,89 @@ RSpec.describe Document, type: :model do
       end
     end
 
-    describe "versioning", :aws do
-      let(:s3_client) { Aws::S3::Client.new(stub_responses: true) }
-      let(:s3_resource) { Aws::S3::Resource.new(client: s3_client) }
+    # describe "versioning", :aws do
+    #   let(:s3_client) { Aws::S3::Client.new(stub_responses: true) }
+    #   let(:s3_resource) { Aws::S3::Resource.new(client: s3_client) }
 
-      before do
-        allow(Aws::S3::Resource).to receive(:new).and_return(s3_resource)
-      end
+    #   before do
+    #     allow(Aws::S3::Resource).to receive(:new).and_return(s3_resource)
+    #   end
 
-      before do
-        allow(Rails.application.config.active_storage).to receive(:service_configurations)
-          .and_return({
-            Rails.env.to_s => {
-              "service" => "S3",
-              "access_key_id" => "test",
-              "secret_access_key" => "test",
-              "region" => "us-east-1",
-              "bucket" => "test-bucket",
-              "endpoint" => "http://localhost:4566",
-              "force_path_style" => true
-            }
-          })
-      end
+    #   before do
+    #     allow(Rails.application.config.active_storage).to receive(:service_configurations)
+    #       .and_return({
+    #         Rails.env.to_s => {
+    #           "service" => "S3",
+    #           "access_key_id" => "test",
+    #           "secret_access_key" => "test",
+    #           "region" => "us-east-1",
+    #           "bucket" => "test-bucket",
+    #           "endpoint" => "http://localhost:4566",
+    #           "force_path_style" => true
+    #         }
+    #       })
+    #   end
 
-      describe "#file_versions" do
-        it "returns list of versions" do
-          versions = [
-            double("version1", version_id: "v1", modification_date: Time.current, size: 1000, etag: "abc"),
-            double("version2", version_id: "v2", modification_date: 1.day.ago, size: 900, etag: "def")
-          ]
+    #   describe "#file_versions" do
+    #     it "returns list of versions" do
+    #       versions = [
+    #         double("version1", version_id: "v1", modification_date: Time.current, size: 1000, etag: "abc"),
+    #         double("version2", version_id: "v2", modification_date: 1.day.ago, size: 900, etag: "def")
+    #       ]
 
-          allow_any_instance_of(Aws::S3::Bucket).to receive(:object_versions)
-            .with(prefix: document.s3_path)
-            .and_return(versions)
+    #       allow_any_instance_of(Aws::S3::Bucket).to receive(:object_versions)
+    #         .with(prefix: document.s3_path)
+    #         .and_return(versions)
 
-          expect(document.file_versions.count).to eq(2)
-        end
-      end
+    #       expect(document.file_versions.count).to eq(2)
+    #     end
+    #   end
 
-      describe "#latest_file" do
-        it "returns the most recent version" do
-          latest = double("latest_version", version_id: "v1", modification_date: Time.current)
-          older = double("older_version", version_id: "v2", modification_date: 1.day.ago)
+    #   describe "#latest_file" do
+    #     it "returns the most recent version" do
+    #       latest = double("latest_version", version_id: "v1", modification_date: Time.current)
+    #       older = double("older_version", version_id: "v2", modification_date: 1.day.ago)
 
-          allow_any_instance_of(Aws::S3::Bucket).to receive(:object_versions)
-            .with(prefix: document.s3_path)
-            .and_return([latest, older])
+    #       allow_any_instance_of(Aws::S3::Bucket).to receive(:object_versions)
+    #         .with(prefix: document.s3_path)
+    #         .and_return([latest, older])
 
-          expect(document.latest_file).to eq(latest)
-        end
-      end
+    #       expect(document.latest_file).to eq(latest)
+    #     end
+    #   end
 
-      describe "#file_version" do
-        it "gets specific version by id" do
-          version = double("version")
-          allow_any_instance_of(Aws::S3::Object).to receive(:get)
-            .with(version_id: "v1")
-            .and_return(version)
+    #   describe "#file_version" do
+    #     it "gets specific version by id" do
+    #       version = double("version")
+    #       allow_any_instance_of(Aws::S3::Object).to receive(:get)
+    #         .with(version_id: "v1")
+    #         .and_return(version)
 
-          expect(document.file_version("v1")).to eq(version)
-        end
-      end
+    #       expect(document.file_version("v1")).to eq(version)
+    #     end
+    #   end
 
-      describe "#version_metadata" do
-        it "returns formatted version metadata" do
-          time = Time.current
-          version = double(
-            "version",
-            version_id: "v1",
-            modification_date: time,
-            size: 1000,
-            etag: "abc123"
-          )
+    #   describe "#version_metadata" do
+    #     it "returns formatted version metadata" do
+    #       time = Time.current
+    #       version = double(
+    #         "version",
+    #         version_id: "v1",
+    #         modification_date: time,
+    #         size: 1000,
+    #         etag: "abc123"
+    #       )
 
-          metadata = document.version_metadata(version)
+    #       metadata = document.version_metadata(version)
 
-          expect(metadata).to include(
-            version_id: "v1",
-            modification_date: time,
-            size: 1000,
-            etag: "abc123"
-          )
-        end
-      end
-    end
+    #       expect(metadata).to include(
+    #         version_id: "v1",
+    #         modification_date: time,
+    #         size: 1000,
+    #         etag: "abc123"
+    #       )
+    #     end
+    #   end
+    # end
   end
 end

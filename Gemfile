@@ -7,7 +7,7 @@ gem "puma", ">= 5.0"
 gem "jsbundling-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
-gem "cssbundling-rails", "~> 1.4.2"
+gem "cssbundling-rails", "~> 1.4.3"
 gem "csv"
 gem "rest-client"
 

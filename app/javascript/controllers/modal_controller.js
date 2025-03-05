@@ -3,10 +3,6 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["summaryView", "metadataView", "historyView", "summaryButton", "metadataButton", "historyButton"]
 
-  connect() {
-    document.addEventListener("turbo:frame-render", this.showSummaryView.bind(this))
-  }
-
   submitAndClose(event) {
     // Let the form submit normally
     // The modal will close automatically when redirected after successful submission

@@ -7,7 +7,7 @@ This application is deployed to AWS ECS using GitHub Actions. Here's how to set 
 1. **Terraform Configuration**
    - Update terraform.tfvars with your GitHub repository:
      ```hcl
-     github_repository = "your-org/your-repo"
+     github_repository = "codeforamerica/asap_pdf"
      ```
    - Set your Rails master key:
      ```hcl

@@ -141,7 +141,6 @@ build/
 .env.staging.local
 *.log.*
 .notes/
-TODO.md
 
 .terraform
 terraform.tfstate

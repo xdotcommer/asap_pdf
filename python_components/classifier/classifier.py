@@ -11,17 +11,17 @@ import pickle
 import re
 
 label_mapping = {
-    0: 'Letter and email correspondence',
-    1: 'Agenda/minutes',
-    2: 'Memo, report, plan, white paper, or study',
-    3: 'Public notice',
-    4: 'Event flyer',
+    0: 'Letter',
+    1: 'Agenda',
+    2: 'Memo',
+    3: 'Notice',
+    4: 'Flyer',
     5: 'Other',
-    6: 'Staff report, ordinance, resolution, agreement',
-    7: 'Procurement announcement and documentation',
-    8: 'Press release, newsletter',
-    9: 'Presentation slides',
-    10: 'Job announcement',
+    6: 'Report',
+    7: 'Procurement',
+    8: 'Press',
+    9: 'Slides',
+    10: 'Job Announcement',
 }
 
 

@@ -33,8 +33,14 @@
         <%= render partial: "shared/filter", locals: { site: @site, documents: @documents, document_categories: @document_categories, total_documents: @total_documents } %>
       </div>
       <div class="px-4 sm:px-0 space-y-0">
-        <div class="bg-white shadow-sm rounded-t-lg px-6 py-4">
-          <h1 class="text-lg font-medium"><%= @site.location %>: <%= @site.name %></h1>
+        <div class="bg-gray-50 shadow-sm rounded-t-lg px-6 py-4  border-b-gray-200 border-b
+">
+          <div class="flex justify-between items-center">
+            <h1 class="text-lg font-medium"><%= @site.location %>: <%= @site.name %></h1>
+            <span class="text-primary"><%= params[:status].present? ? params[:status].titleize.gsub('_', ' ') : "Backlog" %>
+              <i class="fas fa-chevron-down text-xs ml-2"></i>
+            </span>
+          </div>
         </div>
         <div class="bg-white shadow-sm rounded-b-lg overflow-visible">
           <table class="min-w-full divide-y divide-gray-200 table-zebra">
@@ -161,7 +167,7 @@
                   <% end %>
                 </tbody>
               </table>
-              <div class="px-6 py-4 <%= "border-t" if @documents.count > 25 %>">
+              <div class="px-6 py-4 <%= "border-t" if @total_documents > 25 %>">
                 <%= paginate @documents %>
               </div>
             </div>

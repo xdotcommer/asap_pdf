@@ -7,19 +7,19 @@ RSpec.describe Document, type: :model do
     let(:document) { Document.new }
     it { should validate_presence_of(:file_name) }
     it "handles file names with special characters" do
-      document.file_name='%C3%81fidos_GrowGreen_web.pdf'
-      expect(document.file_name).to eq('Áfidos_GrowGreen_web.pdf')
+      document.file_name = "%C3%81fidos_GrowGreen_web.pdf"
+      expect(document.file_name).to eq("Áfidos_GrowGreen_web.pdf")
     end
   end
 
-  describe '#url' do
+  describe "#url" do
     let(:document) { Document.new }
     it { should validate_presence_of(:url) }
     it { should allow_value("http://example.com").for(:url) }
     it { should_not allow_value("invalid-url").for(:url) }
     it "handles urls with special characters" do
-      document.url='https://www.austintexas.gov/growgreen/%25C3%2581fidos_GrowGreen_web.pdf'
-      expect(document.url).to eq('https://www.austintexas.gov/growgreen/%C3%81fidos_GrowGreen_web.pdf')
+      document.url = "https://www.austintexas.gov/growgreen/%25C3%2581fidos_GrowGreen_web.pdf"
+      expect(document.url).to eq("https://www.austintexas.gov/growgreen/%C3%81fidos_GrowGreen_web.pdf")
     end
   end
 

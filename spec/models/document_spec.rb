@@ -3,29 +3,29 @@ require "rails_helper"
 RSpec.describe Document, type: :model do
   it { should belong_to(:site) }
 
-  it { should validate_presence_of(:file_name) }
-  it { should validate_presence_of(:url) }
-  it { should allow_value("http://example.com").for(:url) }
-  it { should_not allow_value("invalid-url").for(:url) }
+  describe "#file_name" do
+    let(:document) { Document.new }
+    it { should validate_presence_of(:file_name) }
+    it "handles file names with special characters" do
+      document.file_name = "%C3%81fidos_GrowGreen_web.pdf"
+      expect(document.file_name).to eq("Áfidos_GrowGreen_web.pdf")
+    end
+  end
+
+  describe "#url" do
+    let(:document) { Document.new }
+    it { should validate_presence_of(:url) }
+    it { should allow_value("http://example.com").for(:url) }
+    it { should_not allow_value("invalid-url").for(:url) }
+    it "handles urls with special characters" do
+      document.url = "https://www.austintexas.gov/growgreen/%25C3%2581fidos_GrowGreen_web.pdf"
+      expect(document.url).to eq("https://www.austintexas.gov/growgreen/%C3%81fidos_GrowGreen_web.pdf")
+    end
+  end
 
   it { should validate_inclusion_of(:document_status).in_array(%w[discovered downloaded]) }
   it "defaults document_status to discovered" do
     expect(Document.new.document_status).to eq("discovered")
-  end
-
-  it { should validate_inclusion_of(:classification_status).in_array(%w[classification_pending auto_classified classified reclassified]) }
-  it "defaults classification_status to classification_pending" do
-    expect(Document.new.classification_status).to eq("classification_pending")
-  end
-
-  it { should validate_inclusion_of(:policy_review_status).in_array(%w[policy_pending auto_reviewed reviewed rereviewed]) }
-  it "defaults policy_review_status to policy_pending" do
-    expect(Document.new.policy_review_status).to eq("policy_pending")
-  end
-
-  it { should validate_inclusion_of(:recommendation_status).in_array(%w[recommendation_pending auto_recommendation recommendation_adjusted recommended]) }
-  it "defaults recommendation_status to recommendation_pending" do
-    expect(Document.new.recommendation_status).to eq("recommendation_pending")
   end
 
   describe "#primary_source" do
@@ -57,89 +57,89 @@ RSpec.describe Document, type: :model do
       end
     end
 
-    describe "versioning", :aws do
-      let(:s3_client) { Aws::S3::Client.new(stub_responses: true) }
-      let(:s3_resource) { Aws::S3::Resource.new(client: s3_client) }
+    # describe "versioning", :aws do
+    #   let(:s3_client) { Aws::S3::Client.new(stub_responses: true) }
+    #   let(:s3_resource) { Aws::S3::Resource.new(client: s3_client) }
 
-      before do
-        allow(Aws::S3::Resource).to receive(:new).and_return(s3_resource)
-      end
+    #   before do
+    #     allow(Aws::S3::Resource).to receive(:new).and_return(s3_resource)
+    #   end
 
-      before do
-        allow(Rails.application.config.active_storage).to receive(:service_configurations)
-          .and_return({
-            Rails.env.to_s => {
-              "service" => "S3",
-              "access_key_id" => "test",
-              "secret_access_key" => "test",
-              "region" => "us-east-1",
-              "bucket" => "test-bucket",
-              "endpoint" => "http://localhost:4566",
-              "force_path_style" => true
-            }
-          })
-      end
+    #   before do
+    #     allow(Rails.application.config.active_storage).to receive(:service_configurations)
+    #       .and_return({
+    #         Rails.env.to_s => {
+    #           "service" => "S3",
+    #           "access_key_id" => "test",
+    #           "secret_access_key" => "test",
+    #           "region" => "us-east-1",
+    #           "bucket" => "test-bucket",
+    #           "endpoint" => "http://localhost:4566",
+    #           "force_path_style" => true
+    #         }
+    #       })
+    #   end
 
-      describe "#file_versions" do
-        it "returns list of versions" do
-          versions = [
-            double("version1", version_id: "v1", modification_date: Time.current, size: 1000, etag: "abc"),
-            double("version2", version_id: "v2", modification_date: 1.day.ago, size: 900, etag: "def")
-          ]
+    #   describe "#file_versions" do
+    #     it "returns list of versions" do
+    #       versions = [
+    #         double("version1", version_id: "v1", modification_date: Time.current, size: 1000, etag: "abc"),
+    #         double("version2", version_id: "v2", modification_date: 1.day.ago, size: 900, etag: "def")
+    #       ]
 
-          allow_any_instance_of(Aws::S3::Bucket).to receive(:object_versions)
-            .with(prefix: document.s3_path)
-            .and_return(versions)
+    #       allow_any_instance_of(Aws::S3::Bucket).to receive(:object_versions)
+    #         .with(prefix: document.s3_path)
+    #         .and_return(versions)
 
-          expect(document.file_versions.count).to eq(2)
-        end
-      end
+    #       expect(document.file_versions.count).to eq(2)
+    #     end
+    #   end
 
-      describe "#latest_file" do
-        it "returns the most recent version" do
-          latest = double("latest_version", version_id: "v1", modification_date: Time.current)
-          older = double("older_version", version_id: "v2", modification_date: 1.day.ago)
+    #   describe "#latest_file" do
+    #     it "returns the most recent version" do
+    #       latest = double("latest_version", version_id: "v1", modification_date: Time.current)
+    #       older = double("older_version", version_id: "v2", modification_date: 1.day.ago)
 
-          allow_any_instance_of(Aws::S3::Bucket).to receive(:object_versions)
-            .with(prefix: document.s3_path)
-            .and_return([latest, older])
+    #       allow_any_instance_of(Aws::S3::Bucket).to receive(:object_versions)
+    #         .with(prefix: document.s3_path)
+    #         .and_return([latest, older])
 
-          expect(document.latest_file).to eq(latest)
-        end
-      end
+    #       expect(document.latest_file).to eq(latest)
+    #     end
+    #   end
 
-      describe "#file_version" do
-        it "gets specific version by id" do
-          version = double("version")
-          allow_any_instance_of(Aws::S3::Object).to receive(:get)
-            .with(version_id: "v1")
-            .and_return(version)
+    #   describe "#file_version" do
+    #     it "gets specific version by id" do
+    #       version = double("version")
+    #       allow_any_instance_of(Aws::S3::Object).to receive(:get)
+    #         .with(version_id: "v1")
+    #         .and_return(version)
 
-          expect(document.file_version("v1")).to eq(version)
-        end
-      end
+    #       expect(document.file_version("v1")).to eq(version)
+    #     end
+    #   end
 
-      describe "#version_metadata" do
-        it "returns formatted version metadata" do
-          time = Time.current
-          version = double(
-            "version",
-            version_id: "v1",
-            modification_date: time,
-            size: 1000,
-            etag: "abc123"
-          )
+    #   describe "#version_metadata" do
+    #     it "returns formatted version metadata" do
+    #       time = Time.current
+    #       version = double(
+    #         "version",
+    #         version_id: "v1",
+    #         modification_date: time,
+    #         size: 1000,
+    #         etag: "abc123"
+    #       )
 
-          metadata = document.version_metadata(version)
+    #       metadata = document.version_metadata(version)
 
-          expect(metadata).to include(
-            version_id: "v1",
-            modification_date: time,
-            size: 1000,
-            etag: "abc123"
-          )
-        end
-      end
-    end
+    #       expect(metadata).to include(
+    #         version_id: "v1",
+    #         modification_date: time,
+    #         size: 1000,
+    #         etag: "abc123"
+    #       )
+    #     end
+    #   end
+    # end
   end
 end

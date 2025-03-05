@@ -5,16 +5,12 @@ class CreateDocuments < ActiveRecord::Migration[8.0]
       t.text :url
       t.integer :file_size
       t.text :source
-      t.string :document_status, default: "discovered"
-      t.string :classification_status, default: "classification_pending"
-      t.string :policy_review_status, default: "policy_pending"
-      t.string :recommendation_status, default: "recommendation_pending"
       t.string :status
-      t.string :document_category, default: "Unknown"
+      t.string :document_status, default: "discovered"
+      t.string :document_category, default: Document::DEFAULT_DOCUMENT_CATEGORY
       t.float :document_category_confidence
-      t.text :accessibility_recommendation, default: "Unknown"
-      t.text :accessibility_action
-      t.datetime :action_taken_on
+      t.text :accessibility_recommendation, default: Document::DEFAULT_ACCESSIBILITY_RECOMMENDATION
+      t.float :accessibility_confidence
       t.text :title
       t.text :author
       t.text :subject
@@ -24,6 +20,9 @@ class CreateDocuments < ActiveRecord::Migration[8.0]
       t.text :producer
       t.text :pdf_version
       t.integer :number_of_pages
+      t.text :notes
+      t.text :summary
+
       t.references :site, null: false, foreign_key: true
 
       t.timestamps

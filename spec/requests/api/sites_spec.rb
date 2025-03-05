@@ -103,9 +103,6 @@ RSpec.describe AsapPdf::API do
 
         existing_doc.reload
         expect(existing_doc.document_status).to eq("discovered")
-        expect(existing_doc.classification_status).to eq("classification_pending")
-        expect(existing_doc.policy_review_status).to eq("policy_pending")
-        expect(existing_doc.recommendation_status).to eq("recommendation_pending")
         expect(existing_doc.modification_date).to be_within(1.second).of(timestamp)
       end
 
@@ -125,9 +122,6 @@ RSpec.describe AsapPdf::API do
 
         existing_doc.reload
         expect(existing_doc.document_status).to eq("discovered")
-        expect(existing_doc.classification_status).to eq("classification_pending")
-        expect(existing_doc.policy_review_status).to eq("policy_pending")
-        expect(existing_doc.recommendation_status).to eq("recommendation_pending")
       end
     end
 

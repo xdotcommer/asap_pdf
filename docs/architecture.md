@@ -24,6 +24,8 @@ The project employs several tools to maintain code quality and security:
 
 ## System Architecture
 
+![asap-system-architecture.png](asap-system-architecture.png "ASAP System Architecture")
+
 ### Components
 
 1. **Rails Application**:
@@ -70,6 +72,10 @@ The project employs several tools to maintain code quality and security:
    - **RDS**: Manages the Rails application database
    - **Fargate**: Runs the Rails application
    - **Elasticache (Redis)**: Manages background jobs and job queuing
+
+## Sequence Diagram for the AI Processing Pipeline
+
+![asap-sequence-diagram.png](asap-sequence-diagram.png "ASAP Sequence Diagram")
 
 ## Document Storage and Versioning
 

@@ -49,4 +49,4 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/access_pdf_test
-        run: bin/rails db:setup spec
+        run: bundle exec rspec

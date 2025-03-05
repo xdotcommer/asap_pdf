@@ -32,6 +32,9 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Setup database
+        run: bin/rails db:migrate
+
       - name: Run tests
         env:
           RAILS_ENV: test

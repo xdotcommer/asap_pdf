@@ -24,7 +24,7 @@ gem "redis", "~> 5.4.0"
 gem "sidekiq", "~> 7.3"
 
 gem "view_component", "~> 3.21"
-gem "overcommit", "~> 0.67.0"
+gem "overcommit", "~> 0.67.1"
 gem "kaminari", "~> 1.2"
 
 group :development, :test do

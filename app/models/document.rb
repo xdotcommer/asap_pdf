@@ -1,8 +1,13 @@
 class Document < ApplicationRecord
+  extend UrlDecodedAttributeHelper
+
   belongs_to :site
   has_many :workflow_histories, class_name: "DocumentWorkflowHistory"
 
   has_paper_trail versions: {scope: -> { order(created_at: :desc) }}
+
+  url_decoded_attribute :file_name
+  url_decoded_attribute :url
 
   scope :by_status, ->(status) {
     case status

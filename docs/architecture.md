@@ -4,6 +4,8 @@
 
 This document outlines the architecture of the PDF processing pipeline, including the integrated Python components, AWS services, and other infrastructure elements. The system is designed to be scalable, maintainable, and follows modern development practices with comprehensive testing and monitoring.
 
+![asap-sequence-diagram.png](asap-sequence-diagram.png "ASAP Sequence Diagram)
+
 ## Development Tools and Practices
 
 The project employs several tools to maintain code quality and security:
@@ -23,6 +25,8 @@ The project employs several tools to maintain code quality and security:
    - **Integration Tests**: End-to-end testing of key workflows
 
 ## System Architecture
+
+![asap-system-architecture.png](asap-system-architecture.png "ASAP System Architecture")
 
 ### Components
 
